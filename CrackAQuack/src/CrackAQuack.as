@@ -12,12 +12,10 @@ package
 	[SWF(backgroundColor="#000000")]
 	public class CrackAQuack extends Sprite
 	{
-		
-		
+		private var main:Main;
 		public function CrackAQuack()
 		{
 			super();
-			
 			
 			// support autoOrients
 //			stage.align = StageAlign.TOP_LEFT;
@@ -61,7 +59,7 @@ package
 		
 		private function onResize(e:Event):void {
 			if (main == null) {
-				var main:Main = new Main();
+				main = new Main();
 				
 				addChild(main);
 			}

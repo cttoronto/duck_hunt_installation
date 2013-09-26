@@ -1,5 +1,6 @@
 package com.cttoronto.mobile.crackaquack.view {
 	import com.adobe.nativeExtensions.Vibration;
+	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.greensock.TweenMax;
 	
 	import flash.display.Bitmap;
@@ -13,14 +14,14 @@ package com.cttoronto.mobile.crackaquack.view {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.sensors.Accelerometer;
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	
-	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import flash.utils.setTimeout;
 	
 	
 	public class GameScreen extends MasterView {
@@ -43,18 +44,14 @@ package com.cttoronto.mobile.crackaquack.view {
 		private var _kills:int = 0;
 		
 		private var _reload:Boolean = false;
+		private var sound_gun:audio_gunfire = new audio_gunfire();
+		
+		private var _videoScale:Number = 1;
+		
 		
 		public function GameScreen():void {
 			super();
-			//this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-		/*
-		private function onAdded(e:Event):void {
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
-			
-			init();
-		}
-		*/
 		override public function initLayout():void{
 			addChild(assets_game);
 			assets_game.graphics.beginFill(0x000000,0);
@@ -65,6 +62,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			super.init();
 			
 			cam = Camera.getCamera();
+			cam.setMode(640,480,24);
 			vid = new Video();
 			
 			tformat.size = 12;
@@ -82,23 +80,18 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			vid.width = 800;//assets_game.width;
 			//vid.height = 440;
-			vid.scaleY = vid.scaleX;
-			if (vid.height > Capabilities.screenResolutionY){
-				vid.y = -(vid.height-Capabilities.screenResolutionX)/2;
-				//vid.x = Capabilities.screenResolutionX - vid.width)/2;
-			}
-			/**/
-			//TweenMax.to(vid, 10,{x:100,y:100});
+			videoScale = vid.scaleX;
+			
+			
 			addChildAt(vid, 0);
 
 			addEventListener(Event.ENTER_FRAME, loop);
-			stage.addEventListener(MouseEvent.CLICK, onClick);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onClick);
 			
 			samplebmpd = new BitmapData(100,100,false);
 			displaybmp = new Bitmap(samplebmpd);
-			//addChild(displaybmp);
+			addChild(displaybmp);
 			
-			samplematrix = new Matrix();
 			accel = new Accelerometer();
 			accel_val = {x:0, y:0, z:0};
 			
@@ -106,14 +99,23 @@ package com.cttoronto.mobile.crackaquack.view {
 			tf.wordWrap = tf.multiline = true;
 			
 			accel.addEventListener(AccelerometerEvent.UPDATE, onAccelUpdate);
-			//addChild(tf);
+//			addChild(tf);
 			for (var i = 1; i < 6; i++){ 
 				assets_game["b"+i].gotoAndStop(1);
 			}
 			assets_game.mc_reload.visible = false;
 			
+			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
-		
+		private function onExit(e:MouseEvent):void{
+			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onClick);
+			TweenMax.to(this, 0.5, {x:-this.width*2});
+			TweenMax.delayedCall(0.5, onDispatchHome);
+		}
+		private function onDispatchHome():void{
+			dispatchEvent(new Event("HOME"));
+		}
 		private function onAccelUpdate(e:AccelerometerEvent):void{
 			accel_val.x = Math.floor(e.accelerationX*100)/100;
 			accel_val.y = Math.floor(e.accelerationY*100)/100;
@@ -164,6 +166,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			}
 			if (rounds >= 0){
 				//tf.text = "Rounds: " + rounds + "\n";
+				sound_gun.play(0);
 				vibe(50);
 			}else{
 				//tf.text = "RELOAD";
@@ -173,14 +176,22 @@ package com.cttoronto.mobile.crackaquack.view {
 				return;
 			}
 			updateRounds();
-			
+			/*
+			vid.scaleX *= 1.1;
+			vid.scaleY = vid.scaleX;
+			*/
 			//vid.width = stage.stageWidth;
 			//vid.height = stage.stageHeight;
 			//vid.x = stage.stageWidth/2;
 			//vid.y = stage.stageHeight/2;
 			
-			samplematrix.tx = -(cam.width-50);
-			samplematrix.ty = -(cam.height-50);
+			//samplematrix.tx = -(cam.width-50);
+			//samplematrix.ty = -(cam.height-50);
+			
+			samplematrix = new Matrix();
+			samplematrix.scale(vid.scaleX, vid.scaleY);
+			samplematrix.tx = -(vid.width/2-50);
+			samplematrix.ty = -(vid.height/2-50);
 			
 			samplebmpd.draw(vid, samplematrix);
 			samplepixel = hexToRGB(samplebmpd.getPixel(50, 50));
@@ -263,7 +274,36 @@ package com.cttoronto.mobile.crackaquack.view {
 			}
 			_reload = value;
 		}
+		override public function destroy():void{
+			super.destroy();
+		}
 
+		public function get videoScale():Number
+		{
+			return _videoScale;
+		}
+
+		public function set videoScale(value:Number):void
+		{
+			vid.scaleY = vid.scaleX = value;
+			vid.x = 0;
+			vid.y = 0;
+			//video left and bottom point
+			var vid_dimensions:Point = this.localToGlobal(new Point(vid.width,vid.height));
+			/*
+			if (vid_dimensions.x > Capabilities.screenResolutionX){
+				var offset_x:Number = this.globalToLocal(new Point((vid_dimensions.x-Capabilities.screenResolutionX)/2, (vid_dimensions.y-Capabilities.screenResolutionY)/2)).x;
+				vid.x = offset_x;
+				addChild(tf);
+				tf.text = String(offset_x) + " " + String(vid.x) + " " +  String(Capabilities.screenResolutionX) + " " + String(vid_dimensions.x);
+			}
+			*/
+			if (vid_dimensions.y > Capabilities.screenResolutionY){
+				var offset_y:Number = -this.globalToLocal(new Point((vid_dimensions.x-Capabilities.screenResolutionX)/2, (vid_dimensions.y-Capabilities.screenResolutionY)/2)).y;
+				vid.y = offset_y;
+			}
+			_videoScale = value;
+		}
 
 	}
 }
