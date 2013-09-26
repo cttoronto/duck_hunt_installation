@@ -214,7 +214,7 @@ package com.cttoronto.mobile.crackaquack.model
 			stage.scaleMode = StageScaleMode.NO_SCALE; 
 			stage.align = StageAlign.TOP_LEFT; 
 			
-			guiSize = new Rectangle(0, 0, 1024, 600); 
+			guiSize = new Rectangle(0, 0, 800, 480); 
 			deviceSize = new Rectangle(0, 0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight)); 
 			appScale = 1; 
 			appSize = guiSize.clone(); 
