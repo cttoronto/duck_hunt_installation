@@ -49,8 +49,8 @@
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
-    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="" releasePackageType="">
-      <airSettings airCertificatePath="" airTimestamp="true" anePathSet="true" version="1">
+    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="C:/Users/Christopher/Desktop/gomangostudios/CTT/duck_hunt_installation/CrackAQuack/certs/QuackACrack.mobileprovision" releasePackageType="">
+      <airSettings airCertificatePath="C:/Users/Christopher/Desktop/gomangostudios/CTT/duck_hunt_installation/CrackAQuack/certs/quackacrack.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths>
           <anePathEntry path="ane/com.adobe.extensions.Vibration.ane"/>
