@@ -30,18 +30,18 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		override public function init():void{
 			super.init();
-			stage.addEventListener(MouseEvent.CLICK, onExit);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
 		private function onExit(e:MouseEvent = null):void{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			TweenMax.killDelayedCallsTo(onExit);
-			
-			stage.removeEventListener(MouseEvent.CLICK, onExit);
 			
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadGame});
 		}
 		protected function onLoadGame(event:MouseEvent = null):void
 		{
-			dispatchEvent(new Event("START"));
+			dispatchEvent(new Event("INSTRUCTIONS"));
 		}
 		/*
 		private function onAdded(e:Event):void {
@@ -84,6 +84,7 @@ package com.cttoronto.mobile.crackaquack.view
 			/*about.removeEventListener(MouseEvent.CLICK, onAbout);
 			start.removeEventListener(MouseEvent.CLICK, onStart);
 			*/
+			
 			super.destroy();			
 		}
 	}

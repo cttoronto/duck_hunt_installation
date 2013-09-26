@@ -28,11 +28,10 @@ package com.cttoronto.mobile.crackaquack.view
 			if (target.scaleX*ConfigValues.START_SCALE.width > Capabilities.screenResolutionY){
 				target.scaleX = target.scaleY = Capabilities.screenResolutionY/ConfigValues.START_SCALE.height;
 				target.x = (Capabilities.screenResolutionX -target.width)/2;
-				trace("HERE TARGETX", target.x);
 			}	
 		}
 		public function onAdded(e:Event):void {
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			//this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 			initLayout();
 			init();
 		}
