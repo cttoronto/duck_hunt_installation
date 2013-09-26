@@ -53,7 +53,7 @@ package com.cttoronto.mobile.crackaquack.view {
 		public function GameScreen():void {
 			super();
 		}
-		override public function initLayout():void{
+		override protected function initLayout():void{
 			addChild(assets_game);
 			assets_game.graphics.beginFill(0x000000,0);
 			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
@@ -73,7 +73,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			super.initLayout();
 		}
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
 			cam = Camera.getCamera();
@@ -120,15 +120,18 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
+		
 		private function onExit(e:MouseEvent):void{
 			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onClick);
 			TweenMax.to(this, 0.5, {x:-this.width*2});
 			TweenMax.delayedCall(0.5, onDispatchHome);
 		}
+		
 		private function onDispatchHome():void{
 			dispatchEvent(new Event("HOME"));
 		}
+		
 		private function onAccelUpdate(e:AccelerometerEvent):void{
 			accel_val.x = Math.floor(e.accelerationX*100)/100;
 			accel_val.y = Math.floor(e.accelerationY*100)/100;

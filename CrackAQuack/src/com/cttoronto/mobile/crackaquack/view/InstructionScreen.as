@@ -15,11 +15,11 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			super();
 		}
-		override public function initLayout():void{
+		override protected function initLayout():void{
 			addChild(assets_instructions);
 			super.initLayout();
 		}
-		override public function init():void{
+		override protected function init():void{
 			super.init();
 			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.CLICK, onCancelClick);
 			assets_instructions.mc_btn_play.addEventListener(MouseEvent.CLICK, onPlayClick);

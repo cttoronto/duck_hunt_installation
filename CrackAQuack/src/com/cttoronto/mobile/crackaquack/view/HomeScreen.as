@@ -24,11 +24,11 @@ package com.cttoronto.mobile.crackaquack.view
 			
 			//this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-		override public function initLayout():void{
+		override protected function initLayout():void{
 			addChild(assets_start);
 			super.initLayout();
 		}
-		override public function init():void{
+		override protected function init():void{
 			super.init();
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onExit);

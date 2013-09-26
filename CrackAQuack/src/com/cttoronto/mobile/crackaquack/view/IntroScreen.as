@@ -17,7 +17,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			super();
 		}
-		override public function initLayout():void{
+		override protected function initLayout():void{
 			addChild(assets_intro);
 			super.initLayout();
 			/*
@@ -29,7 +29,7 @@ package com.cttoronto.mobile.crackaquack.view
 			graphics.drawRect(0,0,Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			*/
 		}
-		override public function init():void{
+		override protected function init():void{
 			super.init();
 			TweenMax.delayedCall(5.5, onExit);
 			stage.addEventListener(MouseEvent.CLICK, onExit);
