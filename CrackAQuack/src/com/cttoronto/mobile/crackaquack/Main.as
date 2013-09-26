@@ -1,11 +1,12 @@
 package com.cttoronto.mobile.crackaquack
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
-	
+	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.cttoronto.mobile.crackaquack.view.GameScreen;
 	import com.cttoronto.mobile.crackaquack.view.HomeScreen;
 	import com.cttoronto.mobile.crackaquack.view.IntroScreen;
+	
+	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	public class Main extends Sprite
 	{
@@ -19,6 +20,9 @@ package com.cttoronto.mobile.crackaquack
 		
 		private function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			
+			DataModel.getInstance().setScaling(stage);
+			
 			showIntro();
 			//showHome();
 			

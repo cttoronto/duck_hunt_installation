@@ -1,5 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view
 {
+	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.greensock.TweenMax;
 	
 	import flash.display.DisplayObject;
@@ -7,8 +9,6 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.system.Capabilities;
-	
-	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	
 	public class MasterView extends Sprite
 	{
@@ -24,7 +24,12 @@ package com.cttoronto.mobile.crackaquack.view
 			if (target == null){
 				target = this;
 			}
-			target.scaleX = target.scaleY = Capabilities.screenResolutionX/ConfigValues.START_SCALE.width;
+			
+			target.scaleX = target.scaleY = DataModel.getInstance().appScale;
+			target.x = DataModel.getInstance().appLeftOffset + (DataModel.getInstance().appSize.width / 2 - target.width / 2);
+			target.y = DataModel.getInstance().appSize.height / 2 - ConfigValues.START_SCALE.height / 2;
+			return;
+			Capabilities.screenResolutionX/ConfigValues.START_SCALE.width;
 			if (target.scaleX*ConfigValues.START_SCALE.width > Capabilities.screenResolutionY){
 				target.scaleX = target.scaleY = Capabilities.screenResolutionY/ConfigValues.START_SCALE.height;
 				target.x = (Capabilities.screenResolutionX -target.width)/2;
@@ -37,8 +42,8 @@ package com.cttoronto.mobile.crackaquack.view
 			init();
 		}
 		public function init():void{
-			x = Capabilities.screenResolutionX;
-			TweenMax.to(this, 0.5, {x:0});
+			x = DataModel.getInstance().appSize.width; //Capabilities.screenResolutionX;
+			TweenMax.to(this, 0.5, {x:DataModel.getInstance().appLeftOffset});
 		}
 		public function destroy():void {			
 			this.removeChildren();			
