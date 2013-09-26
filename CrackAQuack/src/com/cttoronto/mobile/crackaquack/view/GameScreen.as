@@ -44,6 +44,7 @@ package com.cttoronto.mobile.crackaquack.view {
 		private var _kills:int = 0;
 		
 		private var _reload:Boolean = false;
+		private var sound_gun:audio_gunfire = new audio_gunfire();
 		
 		public function GameScreen():void {
 			super();
@@ -89,7 +90,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			samplebmpd = new BitmapData(100,100,false);
 			displaybmp = new Bitmap(samplebmpd);
-			addChild(displaybmp);
+			//addChild(displaybmp);
 			
 			samplematrix = new Matrix();
 			accel = new Accelerometer();
@@ -167,6 +168,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			if (rounds >= 0){
 				//tf.text = "Rounds: " + rounds + "\n";
 				vibe(50);
+				sound_gun.play(0);
 			}else{
 				//tf.text = "RELOAD";
 				vibe(500);
