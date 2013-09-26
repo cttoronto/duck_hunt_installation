@@ -1,5 +1,6 @@
 package com.cttoronto.mobile.crackaquack.view {
 	import com.adobe.nativeExtensions.Vibration;
+	
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.greensock.TweenMax;
 	
@@ -55,7 +56,21 @@ package com.cttoronto.mobile.crackaquack.view {
 		override public function initLayout():void{
 			addChild(assets_game);
 			assets_game.graphics.beginFill(0x000000,0);
-			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height); 
+			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
+			var mc_mask_game:MovieClip = new MovieClip();
+			mc_mask_game.graphics.beginFill(0x00FF00, 0);
+			mc_mask_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+			addChild(mc_mask_game);
+			assets_game.mask = mc_mask_game;
+			
+			var mc_mask_vid:MovieClip = new MovieClip();
+			mc_mask_vid.graphics.beginFill(0x00FF00, 0);
+			mc_mask_vid.graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+			
+			vid = new Video();
+			addChild(mc_mask_vid);
+			vid.mask = mc_mask_vid;
+			
 			super.initLayout();
 		}
 		override public function init():void {
@@ -63,7 +78,6 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			cam = Camera.getCamera();
 			cam.setMode(640,480,24);
-			vid = new Video();
 			
 			tformat.size = 12;
 			tf.defaultTextFormat = tformat;
@@ -81,7 +95,6 @@ package com.cttoronto.mobile.crackaquack.view {
 			vid.width = 800;//assets_game.width;
 			//vid.height = 440;
 			videoScale = vid.scaleX;
-			
 			
 			addChildAt(vid, 0);
 

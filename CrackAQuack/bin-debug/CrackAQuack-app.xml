@@ -291,15 +291,7 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-    <iPad>
-        <InfoAdditions><![CDATA[
-			<key>UIDeviceFamily</key>
-			<array>
-				<string>1</string>
-			</array>
-		]]></InfoAdditions>
-        <requestedDisplayResolution>high</requestedDisplayResolution>
-    </iPad>
+
 
 <extensions>
         <extensionID>com.adobe.Vibration</extensionID>
