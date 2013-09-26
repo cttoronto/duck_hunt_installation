@@ -17,10 +17,10 @@ package com.cttoronto.mobile.crackaquack.view
 			super();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-		public function initLayout():void{
+		protected function initLayout():void{
 			scaleObject();
 		}
-		public function scaleObject(target:DisplayObject = null){
+		protected function scaleObject(target:DisplayObject = null):void {
 			if (target == null){
 				target = this;
 			}
@@ -35,12 +35,12 @@ package com.cttoronto.mobile.crackaquack.view
 				target.x = (Capabilities.screenResolutionX -target.width)/2;
 			}	
 		}
-		public function onAdded(e:Event):void {
+		protected function onAdded(e:Event):void {
 			//this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 			initLayout();
 			init();
 		}
-		public function init():void{
+		protected function init():void{
 			x = DataModel.getInstance().appSize.width; //Capabilities.screenResolutionX;
 			TweenMax.to(this, 0.5, {x:DataModel.getInstance().appLeftOffset});
 		}
