@@ -36,7 +36,8 @@ package com.cttoronto.mobile.crackaquack.view
 			}	
 		}
 		protected function onAdded(e:Event):void {
-			//this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			
 			initLayout();
 			init();
 		}
