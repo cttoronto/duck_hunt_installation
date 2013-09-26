@@ -1,5 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view
 {
+	import com.greensock.TweenMax;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -9,19 +11,39 @@ package com.cttoronto.mobile.crackaquack.view
 	
 	import com.cttoronto.mobile.crackaquack.view.components.Button;
 	
-	public class HomeScreen extends Sprite
+	public class HomeScreen extends MasterView
 	{
-		
+		/*
 		private var about:Button;
 		private var start:Button;
-		
+		*/
+		private var assets_start:mc_view_startscreen = new mc_view_startscreen();
 		public function HomeScreen()
 		{
 			super();
 			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			//this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-		
+		override public function initLayout():void{
+			addChild(assets_start);
+			super.initLayout();
+		}
+		override public function init():void{
+			super.init();
+			stage.addEventListener(MouseEvent.CLICK, onExit);
+		}
+		private function onExit(e:MouseEvent = null):void{
+			TweenMax.killDelayedCallsTo(onExit);
+			
+			stage.removeEventListener(MouseEvent.CLICK, onExit);
+			
+			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadGame});
+		}
+		protected function onLoadGame(event:MouseEvent = null):void
+		{
+			dispatchEvent(new Event("START"));
+		}
+		/*
 		private function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 			
@@ -57,14 +79,12 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			dispatchEvent(new Event("ABOUT"));
 		}
-		
-		public function destroy():void {
-			
-			about.removeEventListener(MouseEvent.CLICK, onAbout);
+		*/
+		override public function destroy():void {
+			/*about.removeEventListener(MouseEvent.CLICK, onAbout);
 			start.removeEventListener(MouseEvent.CLICK, onStart);
-			
-			this.removeChildren();
-			
+			*/
+			super.destroy();			
 		}
 	}
 }

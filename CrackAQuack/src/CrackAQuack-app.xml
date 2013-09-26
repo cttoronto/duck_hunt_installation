@@ -276,6 +276,7 @@
 					together in order to use AIR's NetworkInfo APIs-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+			    <uses-permission android:name="android.permission.VIBRATE"/>
 			</manifest>
 			
 		]]></manifestAdditions>

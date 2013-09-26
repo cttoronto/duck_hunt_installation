@@ -18,6 +18,7 @@ package
 		{
 			super();
 			
+			
 			// support autoOrients
 //			stage.align = StageAlign.TOP_LEFT;
 //			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -61,6 +62,7 @@ package
 		private function onResize(e:Event):void {
 			if (main == null) {
 				var main:Main = new Main();
+				
 				addChild(main);
 			}
 		}

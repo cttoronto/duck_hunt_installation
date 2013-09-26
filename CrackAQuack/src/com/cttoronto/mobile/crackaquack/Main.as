@@ -5,10 +5,12 @@ package com.cttoronto.mobile.crackaquack
 	
 	import com.cttoronto.mobile.crackaquack.view.GameScreen;
 	import com.cttoronto.mobile.crackaquack.view.HomeScreen;
+	import com.cttoronto.mobile.crackaquack.view.IntroScreen;
 	
 	public class Main extends Sprite
 	{
 		private var homeScreen:HomeScreen;
+		private var introScreen:IntroScreen;
 		
 		public function Main()
 		{
@@ -17,11 +19,22 @@ package com.cttoronto.mobile.crackaquack
 		
 		private function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
-			
-			showHome();
+			showIntro();
+			//showHome();
 			
 		}
-		
+		private function showIntro():void{
+			introScreen = new IntroScreen();
+			introScreen.addEventListener("HOME", onHomeLoad);
+			addChild(introScreen);
+		}
+		private function removeIntro():void {
+			introScreen.removeEventListener("HOME", onHomeLoad);
+			removeChild(introScreen);
+			
+			introScreen.destroy();
+			introScreen = null;
+		}
 		private function showHome():void {
 			homeScreen = new HomeScreen();
 			homeScreen.addEventListener("ABOUT", onAboutLoad);
@@ -37,8 +50,13 @@ package com.cttoronto.mobile.crackaquack
 			homeScreen.destroy();
 			homeScreen = null;
 		}
-		
+		private function onHomeLoad(e:Event):void {
+			removeIntro();
+			
+			showHome();
+		}
 		private function onStartLoad(e:Event):void {
+			trace("START LOAD GAMESCREEN");
 			removeHome();
 			
 			addChild(new GameScreen());

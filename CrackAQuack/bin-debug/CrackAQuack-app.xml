@@ -15,7 +15,7 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>CrackAQuack</id>
+	<id>CrackAQuack.debug</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>CrackAQuack</filename>
@@ -276,6 +276,7 @@
 					together in order to use AIR's NetworkInfo APIs-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+			    <uses-permission android:name="android.permission.VIBRATE"/>
 			</manifest>
 			
 		]]></manifestAdditions>
@@ -289,7 +290,6 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-
 
 <extensions>
         <extensionID>com.adobe.Vibration</extensionID>
