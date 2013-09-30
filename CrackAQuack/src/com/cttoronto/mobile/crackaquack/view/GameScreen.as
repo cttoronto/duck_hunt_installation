@@ -61,6 +61,8 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		private var vid_startScale:Number = 2.5;
 		
+		private var vid_parent:MovieClip = new MovieClip();
+		
 		public function GameScreen():void {
 			super();
 		}
@@ -81,9 +83,9 @@ package com.cttoronto.mobile.crackaquack.view {
 			mc_mask_vid.graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			
 			vid = new Video();
-			addChild(mc_mask_vid);
+			vid_parent.addChild(mc_mask_vid);
 			vid.mask = mc_mask_vid;
-			
+			vid_parent.addChild(vid);
 			zoom_slider = assets_game.mc_zoom_indicator;
 			
 			super.initLayout();
@@ -112,7 +114,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			videoScale = vid.scaleX;
 			vid_startScale = vid.scaleX;
 			
-			addChildAt(vid, 0);
+			addChildAt(vid_parent, 0);
 
 			addEventListener(Event.ENTER_FRAME, loop);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onClick);
@@ -267,13 +269,12 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			//samplematrix.tx = -(cam.width-50);
 			//samplematrix.ty = -(cam.height-50);
-			
 			samplematrix = new Matrix();
-			samplematrix.scale(vid.scaleX, vid.scaleY);
+			//samplematrix.scale(vid.scaleX, vid.scaleY);
 			samplematrix.tx = -(mc_mask_vid.width/2-50);
 			samplematrix.ty = -(mc_mask_vid.height/2-50);
 			vid.mask = null;
-			samplebmpd.draw(vid,samplematrix);
+			samplebmpd.draw(vid_parent,samplematrix);
 			vid.mask = mc_mask_vid;
 			samplepixel = hexToRGB(samplebmpd.getPixel(50, 50));
 			
