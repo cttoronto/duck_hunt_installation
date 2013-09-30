@@ -1,6 +1,8 @@
 package com.cttoronto.mobile.crackaquack.model
 {
 
+	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -214,7 +216,7 @@ package com.cttoronto.mobile.crackaquack.model
 			stage.scaleMode = StageScaleMode.NO_SCALE; 
 			stage.align = StageAlign.TOP_LEFT; 
 			
-			guiSize = new Rectangle(0, 0, 800, 480); 
+			guiSize = new Rectangle(0, 0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height); 
 			deviceSize = new Rectangle(0, 0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight)); 
 			appScale = 1; 
 			appSize = guiSize.clone(); 

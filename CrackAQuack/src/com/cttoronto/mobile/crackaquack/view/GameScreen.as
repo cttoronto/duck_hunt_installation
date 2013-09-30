@@ -1,6 +1,5 @@
 package com.cttoronto.mobile.crackaquack.view {
 	import com.adobe.nativeExtensions.Vibration;
-	
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.greensock.TweenMax;
 	
@@ -16,14 +15,13 @@ package com.cttoronto.mobile.crackaquack.view {
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.sensors.Accelerometer;
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.utils.setTimeout;
-	
 	
 	public class GameScreen extends MasterView {
 		
@@ -47,23 +45,38 @@ package com.cttoronto.mobile.crackaquack.view {
 		private var _reload:Boolean = false;
 		private var sound_gun:audio_gunfire = new audio_gunfire();
 		
+		private var mc_mask_vid:MovieClip = new MovieClip();
+		private var mc_mask_game:MovieClip = new MovieClip();
+		
 		private var _videoScale:Number = 1;
 		
+		private var zoom_slider:MovieClip;
+		
+		private var zoom_drag:Boolean = false;
+		
+		private var zoom_hit:MovieClip = new MovieClip();
+		
+		private var zoom_percent_max:Number = 1.5;
+		private var zoom_percent_min:Number = 0.5;
+		
+		private var vid_startScale:Number = 2.5;
 		
 		public function GameScreen():void {
 			super();
 		}
 		override protected function initLayout():void{
 			addChild(assets_game);
+			graphics.beginFill(0x222222, 1);
+			graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
+			
 			assets_game.graphics.beginFill(0x000000,0);
 			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
-			var mc_mask_game:MovieClip = new MovieClip();
+			
 			mc_mask_game.graphics.beginFill(0x00FF00, 0);
 			mc_mask_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			addChild(mc_mask_game);
 			assets_game.mask = mc_mask_game;
 			
-			var mc_mask_vid:MovieClip = new MovieClip();
 			mc_mask_vid.graphics.beginFill(0x00FF00, 0);
 			mc_mask_vid.graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			
@@ -71,11 +84,13 @@ package com.cttoronto.mobile.crackaquack.view {
 			addChild(mc_mask_vid);
 			vid.mask = mc_mask_vid;
 			
+			zoom_slider = assets_game.mc_zoom_indicator;
+			
 			super.initLayout();
+			
 		}
 		override protected function init():void {
 			super.init();
-			
 			cam = Camera.getCamera();
 			cam.setMode(640,480,24);
 			
@@ -95,6 +110,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			vid.width = 800;//assets_game.width;
 			//vid.height = 440;
 			videoScale = vid.scaleX;
+			vid_startScale = vid.scaleX;
 			
 			addChildAt(vid, 0);
 
@@ -113,14 +129,58 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			accel.addEventListener(AccelerometerEvent.UPDATE, onAccelUpdate);
 //			addChild(tf);
-			for (var i = 1; i < 6; i++){ 
+			for (var i:Number = 1; i < 6; i++){ 
 				assets_game["b"+i].gotoAndStop(1);
 			}
 			assets_game.mc_reload.visible = false;
 			
 			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
+			
+			if (!Accelerometer.isSupported){
+				assets_game.mc_reload.addEventListener(MouseEvent.CLICK, reloadRounds);
+			}
+			//zoom_slider.x = this.width - zoom_slider.width;
+			
+			stage.addEventListener(MouseEvent.MOUSE_UP, onZoomMouseInteraction);
+			zoom_hit.addEventListener(MouseEvent.MOUSE_DOWN, onZoomMouseInteraction);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			stage.addEventListener(MouseEvent.MOUSE_OUT, onZoomMouseInteraction);
+			
+			zoom_hit.graphics.beginFill(0x00FF00, 0);
+			zoom_hit.graphics.drawRect(0,0,zoom_slider.width, ConfigValues.START_SCALE.height);
+			assets_game.addChild(zoom_hit);
+			zoom_hit.x = zoom_slider.x;
 		}
-		
+		private function onZoomMouseInteraction(e:MouseEvent):void{
+			if (e.type == MouseEvent.MOUSE_UP || e.type == MouseEvent.MOUSE_OUT){
+				zoom_drag = false;
+//				zoom_slider.stopDrag();
+			}else if (e.type == MouseEvent.MOUSE_DOWN){
+				zoom_drag = true;
+				onMouseMove();
+			//	zoom_slider.startDrag(false, new Rectangle(zoom_slider.x,0,zoom_slider.x, this.height));
+			}
+		}
+		private function onMouseMove(e:MouseEvent = null):void{
+			if (zoom_drag == true){
+				var local_height:Number = (zoom_slider.localToGlobal(new Point(0,zoom_slider.y + zoom_slider.height)).y - zoom_slider.localToGlobal(new Point(0,zoom_slider.y)).y)/2;
+				zoom_slider.y = globalToLocal(new Point(0,stage.mouseY)).y - 5;
+				
+				var amt_scale:Number = (zoom_hit.height - zoom_slider.y)/zoom_hit.height;
+				
+				amt_scale = Math.floor((zoom_percent_min+amt_scale*(zoom_percent_max - zoom_percent_min))*100)/100;
+				
+				zoom_slider.text.text = (amt_scale*100)+"%";
+				vid.scaleX = vid.scaleY = vid_startScale * amt_scale;
+				
+				var local_offset:Point = this.localToGlobal(new Point(vid.width, vid.height));
+				local_offset = this.globalToLocal(local_offset);
+//				vid.x = ((this.scaleX * ConfigValues.START_SCALE.width) - local_offset.x)/2;
+//				vid.y = ((this.scaleY * ConfigValues.START_SCALE.height) - local_offset.y)/2;
+				vid.x = ConfigValues.START_SCALE.width/2 - vid.width/2;
+				vid.y = ConfigValues.START_SCALE.height/2 - vid.height/2;
+			}
+		}
 		private function onExit(e:MouseEvent):void{
 			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onClick);
@@ -151,32 +211,36 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		
 		private function vibe(t:Number = 100):void{
+			/*
 			var vibe:Vibration;
 			if (Vibration.isSupported) {
 				vibe = new Vibration();
 				vibe.vibrate(t);
 			}
+			*/
 		}
 		private function updateRounds():void{
-			for (var i = 1; i < 6; i++){ 
+			for (var i:Number = 1; i < 6; i++){ 
 				assets_game["b"+i].gotoAndStop(2);
 			}
 			for (i = 0; i < rounds; i++){
 				assets_game["b"+(i+1)].gotoAndStop(1);
 			}
 		}
-		
+		private function reloadRounds(e:Event = null):void{
+			rounds = 5;
+			
+			updateRounds();
+			reload = false;
+			//tf.text = "Rounds: " + rounds + "\n";
+			vibe(200);
+			TweenMax.delayedCall(0.3, vibe);
+		}
 		private function onClick(e:MouseEvent):void{	
 			//tf.text = accel_val.x + "\n" + accel_val.y + "\n" + accel_val.z + "\n";
 			rounds --;
 			if (accel_val.x <0.5 && accel_val.x >-0.5 &&accel_val.y <0.5 && accel_val.y >-0.5 &&accel_val.z <1.5 && accel_val.z >0.75){
-				rounds = 5;
-				
-				updateRounds();
-				reload = false;
-				//tf.text = "Rounds: " + rounds + "\n";
-				vibe(200);
-				TweenMax.delayedCall(0.3, vibe);
+				reloadRounds()
 				
 				return
 			}
@@ -206,10 +270,11 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			samplematrix = new Matrix();
 			samplematrix.scale(vid.scaleX, vid.scaleY);
-			samplematrix.tx = -(vid.width/2-50);
-			samplematrix.ty = -(vid.height/2-50);
-			
-			samplebmpd.draw(vid, samplematrix);
+			samplematrix.tx = -(mc_mask_vid.width/2-50);
+			samplematrix.ty = -(mc_mask_vid.height/2-50);
+			vid.mask = null;
+			samplebmpd.draw(vid,samplematrix);
+			vid.mask = mc_mask_vid;
 			samplepixel = hexToRGB(samplebmpd.getPixel(50, 50));
 			
 			//tf.text += samplepixel.r + " " + samplepixel.g + " " + samplepixel.b;

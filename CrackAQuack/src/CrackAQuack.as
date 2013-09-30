@@ -18,8 +18,8 @@ package
 			super();
 			
 			// support autoOrients
-//			stage.align = StageAlign.TOP_LEFT;
-//			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 //			
 //			var guiSize:Rectangle = new Rectangle(0,0,1024, 600);
 //			var deviceSize:Rectangle = new Rectangle(0,0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight));
@@ -53,8 +53,6 @@ package
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 			stage.addEventListener(Event.RESIZE, onResize);
-			
-			
 		}
 		
 		private function onResize(e:Event):void {

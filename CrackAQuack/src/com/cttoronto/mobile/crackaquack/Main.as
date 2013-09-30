@@ -23,7 +23,11 @@ package com.cttoronto.mobile.crackaquack
 		
 		private function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
-			showIntro();
+//			showIntro();
+			
+			gameScreen = new GameScreen();
+			gameScreen.addEventListener("HOME", onGameHomeLoad);
+			addChild(gameScreen);
 		}
 		private function showIntro():void{
 			introScreen = new IntroScreen();

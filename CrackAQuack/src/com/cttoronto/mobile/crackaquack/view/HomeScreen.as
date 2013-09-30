@@ -7,7 +7,7 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import assets.crack_start;
+//	import assets.crack_start;
 	
 	import com.cttoronto.mobile.crackaquack.view.components.Button;
 	
