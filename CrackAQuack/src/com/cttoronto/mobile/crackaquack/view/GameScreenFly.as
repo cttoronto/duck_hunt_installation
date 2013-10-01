@@ -17,8 +17,10 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.sensors.Accelerometer;
+	import flash.utils.Timer;
 	import flash.utils.getTimer;
 
 	public class GameScreenFly extends MasterView
@@ -36,7 +38,9 @@ package com.cttoronto.mobile.crackaquack.view
 		private var assets_game:mc_view_game_fly = new mc_view_game_fly();
 		private var _score:int  = 0;
 		private var color_fill:MovieClip = new MovieClip();
-		private var color_fill_flapmessage:MovieClip = new MovieClip();
+		private var score_timer:Timer = new Timer(1000);
+		
+//		private var color_fill_flapmessage:MovieClip = new MovieClip();
 		public function GameScreenFly()
 		{
 			super();
@@ -49,15 +53,15 @@ package com.cttoronto.mobile.crackaquack.view
 			
 			color_fill.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
 			color_fill.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
-			color_fill_flapmessage.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
-			color_fill_flapmessage.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+//			color_fill_flapmessage.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
+//			color_fill_flapmessage.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			
 			assets_game.addChild(color_fill);
-			assets_game.addChild(color_fill_flapmessage);
+//			assets_game.addChild(color_fill_flapmessage);
 			
 			color_fill.mask = assets_game.mc_duck;
 //			color_fill_flapmessage.mask = assets_game.mc_flap;
-			color_fill_flapmessage.mask = assets_game.mc_dead_duck;
+//			color_fill_flapmessage.mask = assets_game.mc_dead_duck;
 			
 			super.initLayout();
 		}
@@ -77,8 +81,15 @@ package com.cttoronto.mobile.crackaquack.view
 			register(true);
 			addEventListener( Event.ACTIVATE, activateHandler, false, 0, true );
 			addEventListener( Event.DEACTIVATE, deactivateHandler, false, 0, true );
+			score_timer.addEventListener(TimerEvent.TIMER, onTimer);
+			score_timer.start();
+		}
+		private function onTimer(e:TimerEvent):void{
+			score++;
 		}
 		private function deadduck():void{
+			score_timer.stop();
+			score_timer.removeEventListener(TimerEvent.TIMER, onTimer);
 			assets_game.mc_dead_duck.visible = true;
 			assets_game.mc_duck.visible = assets_game.mc_flap.visible = false;
 		}
@@ -130,7 +141,7 @@ package com.cttoronto.mobile.crackaquack.view
 			if (Math.abs(e.accelerationX - lastAccelX) > 0.5 || Math.abs(e.accelerationY - lastAccelY) > 0.5  || Math.abs(e.accelerationZ - lastAccelZ) > 0.5 ) {
 				shaking = true;
 				
-				score ++;
+				//score ++;
 				assets_game.mc_duck.gotoAndPlay(2);
 				TweenMax.killTweensOf(assets_game.mc_flap);
 				TweenMax.to(assets_game.mc_flap, 0.5, {alpha:0});
@@ -244,6 +255,9 @@ package com.cttoronto.mobile.crackaquack.view
 			_score = value;
 			assets_game.fly_score.text = String(_score);
 		}
-
+		override public function destroy():void{
+			score_timer.removeEventListener(TimerEvent.TIMER, onTimer);
+			super.destroy();
+		}
 	}
 }

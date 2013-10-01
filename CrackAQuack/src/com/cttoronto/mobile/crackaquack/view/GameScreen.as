@@ -303,9 +303,9 @@ package com.cttoronto.mobile.crackaquack.view {
 			//samplematrix.scale(vid.scaleX, vid.scaleY);
 			samplematrix.tx = -(ConfigValues.START_SCALE.width/2-50);
 			samplematrix.ty = -(ConfigValues.START_SCALE.height/2-50);
-			vid.mask = null;
+//			vid.mask = null;
 			samplebmpd.draw(vid_parent,samplematrix);
-			//vid.mask = mc_mask_vid;
+//			vid.mask = mc_mask_vid;
 			samplepixel = hexToRGB(samplebmpd.getPixel(50, 50));
 			
 			//tf.text += samplepixel.r + " " + samplepixel.g + " " + samplepixel.b;
