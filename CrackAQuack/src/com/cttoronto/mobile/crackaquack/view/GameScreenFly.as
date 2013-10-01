@@ -2,6 +2,13 @@ package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
+	
+	/* removed ane start */
+	import com.distriqt.extension.compass.Compass;
+	import com.distriqt.extension.compass.events.CompassEvent;
+	import com.distriqt.extension.compass.events.MagneticFieldEvent;
+	/*end removed ane */
+	
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Circ;
 	import com.greensock.easing.Expo;
@@ -76,25 +83,25 @@ package com.cttoronto.mobile.crackaquack.view
 		private function setupCompass():void {
 			try
 			{
-				/* removed ane 
+				/* removed ane start */
 				Compass.init( DEV_KEY );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_AVAILABLE, 		compass_magneticFieldAvailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UPDATED, 		compass_magneticFieldUpdatedHandler, false, 0, true );
 				Compass.service.addEventListener(CompassEvent.HEADING_UPDATED, onHeadingUpdated, false, 0, true );
-				removed ane */
+				/*end removed ane */
 			}
 			catch (e:Error)
 			{
 				trace( "ERROR:"+e.message );
 			}
 		}
-		/* removed ane
+		/* removed ane start */
 		private function onHeadingUpdated(e:CompassEvent):void{
 			message(String(e.magneticHeading));
 			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}				
-		removed ane */
+		/*end removed ane */
 		private function setupShakeDetection():void {
 			
 			if (Accelerometer.isSupported) {
@@ -140,7 +147,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			try
 			{
-				/* removed ane
+				/* removed ane start */
 				if (Compass.isSupported)
 				{
 					if (reg && !_registered)
@@ -160,14 +167,14 @@ package com.cttoronto.mobile.crackaquack.view
 				{
 					message("not supported");
 				}
-				removed ane */
+				/*end removed ane */
 			}
 			catch (e:Error)
 			{
 				message( "ERROR:"+e.message );
 			}
 		}
-		/* removed ane
+		/* removed ane start */
 		private function compass_headingUpdatedHandler( event:CompassEvent ):void
 		{
 			message( event.type +":"+ event.magneticHeading+":"+ event.trueHeading+":"+ event.headingAccuracy );
@@ -179,7 +186,7 @@ package com.cttoronto.mobile.crackaquack.view
 			//			_headingRaw.text = String(event.magneticHeading) +"   ["+event.headingAccuracy+"]";
 		}
 		
-		removed ane */
+		/*end removed ane */
 		
 		private function activateHandler( event:Event ):void
 		{
@@ -191,7 +198,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			register(false) 	
 		}
-		/* removed ane
+		/* removed ane start */
 		
 		private function compass_magneticFieldUpdatedHandler( event:MagneticFieldEvent ):void
 		{
@@ -211,7 +218,7 @@ package com.cttoronto.mobile.crackaquack.view
 			message( "magnetic field unavailable" );
 		}
 
-		removed ane */
+		/*end removed ane */
 		public function get score():int
 		{
 			return _score;

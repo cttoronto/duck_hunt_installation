@@ -16,14 +16,16 @@ package com.cttoronto.mobile.crackaquack.view
 	
 	public class MasterView extends Sprite
 	{
+		private var sizing_filler:mc_transparent_pixel = new mc_transparent_pixel();
+		
 		public function MasterView()
 		{
 			super();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		protected function initLayout():void{
-			graphics.beginFill(0x00FF00, 0);
-			graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+//			graphics.beginFill(0x00FF00, 0);
+//			graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			scaleObject();
 		}
 		public function get screenDimensions():Rectangle{
@@ -55,7 +57,10 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		protected function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
-			
+			sizing_filler.width = ConfigValues.START_SCALE.width;
+			sizing_filler.height = ConfigValues.START_SCALE.height;
+			addChild(sizing_filler);
+
 			initLayout();
 			init();
 		}
@@ -68,7 +73,8 @@ package com.cttoronto.mobile.crackaquack.view
 //			x = DataModel.getInstance().appSize.width; //Capabilities.screenResolutionX;
 			TweenMax.to(this, 0.5, {x:orig_x});
 		}
-		public function destroy():void {			
+		public function destroy():void {
+			
 			this.removeChildren();			
 		}
 	}

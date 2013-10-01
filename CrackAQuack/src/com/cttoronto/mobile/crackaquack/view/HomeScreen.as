@@ -1,15 +1,13 @@
 package com.cttoronto.mobile.crackaquack.view
 {
+	import com.cttoronto.mobile.crackaquack.view.components.Button;
+	import com.cttoronto.mobile.crackaquack.view.components.LoginRegistration;
 	import com.greensock.TweenMax;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	
-//	import assets.crack_start;
-	
-	import com.cttoronto.mobile.crackaquack.view.components.Button;
 	
 	public class HomeScreen extends MasterView
 	{
@@ -18,10 +16,11 @@ package com.cttoronto.mobile.crackaquack.view
 		private var start:Button;
 		*/
 		private var assets_start:mc_view_startscreen = new mc_view_startscreen();
+		
+		private var view_login:LoginRegistration;
 		public function HomeScreen()
 		{
 			super();
-			
 			//this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		override protected function initLayout():void{
@@ -33,7 +32,12 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_start.mc_btn_shoot.addEventListener(MouseEvent.MOUSE_UP, onShoot);
 			assets_start.mc_btn_fly.addEventListener(MouseEvent.MOUSE_UP, onFly);
 			
-			assets_start.mc_login_lightbox.visible = false;
+			view_login = new LoginRegistration();
+			addChild(view_login);
+			
+//			assets_start.mc_login_lightbox.tracer();
+//			assets_start.mc_login_lightbox.visible = false;
+			
 			//stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			//stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
