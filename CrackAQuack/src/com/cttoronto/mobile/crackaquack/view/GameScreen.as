@@ -1,8 +1,8 @@
 package com.cttoronto.mobile.crackaquack.view {
 	/* removed ane start */
 	import com.adobe.nativeExtensions.Vibration;
-	/*end removed ane */
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.greensock.TweenMax;
 	
 	import flash.display.Bitmap;
@@ -110,8 +110,11 @@ package com.cttoronto.mobile.crackaquack.view {
 		override protected function init():void {
 			super.init();
 			cam = Camera.getCamera();
-			cam.setMode(640,480,24);
-			
+			if (DataModel.getDevice().indexOf("cyanogen") > -1){
+				cam.setMode(480,360,24);
+			}else{
+				cam.setMode(640,480,24);
+			}
 			tformat.size = 12;
 			tf.defaultTextFormat = tformat;
 			tf.x = 100;

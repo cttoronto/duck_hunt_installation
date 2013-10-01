@@ -198,6 +198,9 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		public static function getDevice():String { 
 			var info:Array = Capabilities.os.split(" "); 
+			if (String(info[1]).indexOf("cyanogen")!= -1) { 
+				return String(info[1]); 
+			} 
 			if (info[0] + " " + info[1] != "iPhone OS") { 
 				return UNKNOWN; 
 			} 
@@ -207,7 +210,8 @@ package com.cttoronto.mobile.crackaquack.model
 				if (info[3].indexOf(device) != -1) { 
 					return device; 
 				} 
-			} 
+			}
+			
 			return UNKNOWN; 
 		} 
 		

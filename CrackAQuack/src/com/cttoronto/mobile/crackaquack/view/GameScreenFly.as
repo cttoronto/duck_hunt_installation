@@ -2,13 +2,9 @@ package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
-	
-	/* removed ane start */
 	import com.distriqt.extension.compass.Compass;
 	import com.distriqt.extension.compass.events.CompassEvent;
 	import com.distriqt.extension.compass.events.MagneticFieldEvent;
-	/*end removed ane */
-	
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Circ;
 	import com.greensock.easing.Expo;
@@ -39,6 +35,8 @@ package com.cttoronto.mobile.crackaquack.view
 		private var mc_arrow:MovieClip = new MovieClip();
 		private var assets_game:mc_view_game_fly = new mc_view_game_fly();
 		private var _score:int  = 0;
+		private var color_fill:MovieClip = new MovieClip();
+		private var color_fill_flapmessage:MovieClip = new MovieClip();
 		public function GameScreenFly()
 		{
 			super();
@@ -48,6 +46,18 @@ package com.cttoronto.mobile.crackaquack.view
 			addChild(assets_game);
 			assets_game.graphics.beginFill(0x000000,0);
 			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
+			
+			color_fill.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
+			color_fill.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+			color_fill_flapmessage.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
+			color_fill_flapmessage.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
+			
+			assets_game.addChild(color_fill);
+			assets_game.addChild(color_fill_flapmessage);
+			
+			color_fill.mask = assets_game.mc_duck;
+//			color_fill_flapmessage.mask = assets_game.mc_flap;
+			color_fill_flapmessage.mask = assets_game.mc_dead_duck;
 			
 			super.initLayout();
 		}
@@ -89,12 +99,17 @@ package com.cttoronto.mobile.crackaquack.view
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UPDATED, 		compass_magneticFieldUpdatedHandler, false, 0, true );
 				Compass.service.addEventListener(CompassEvent.HEADING_UPDATED, onHeadingUpdated, false, 0, true );
+				//Compass.service.addEventListener(CompassEvent.HEADING_RAW_UPDATED, onHeadingRaw);
 				/*end removed ane */
 			}
 			catch (e:Error)
 			{
 				trace( "ERROR:"+e.message );
 			}
+		}
+		private function onHeadingRaw(e:CompassEvent):void{
+			message(String(e.magneticHeading));
+			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}
 		/* removed ane start */
 		private function onHeadingUpdated(e:CompassEvent):void{
