@@ -1,9 +1,10 @@
 package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
-	import com.distriqt.extension.compass.Compass;
-	import com.distriqt.extension.compass.events.CompassEvent;
-	import com.distriqt.extension.compass.events.MagneticFieldEvent;
+	import com.cttoronto.mobile.crackaquack.model.DataModel;
+	import com.greensock.TweenMax;
+	import com.greensock.easing.Circ;
+	import com.greensock.easing.Expo;
 	
 	import flash.display.MovieClip;
 	import flash.display.Screen;
@@ -12,6 +13,7 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.display.StageScaleMode;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.sensors.Accelerometer;
 	import flash.utils.getTimer;
@@ -36,37 +38,63 @@ package com.cttoronto.mobile.crackaquack.view
 			
 		}
 		override protected function initLayout():void{
-			addChild(assets_game);assets_game.graphics.beginFill(0x000000,0);
+			addChild(assets_game);
+			assets_game.graphics.beginFill(0x000000,0);
 			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
+			
 			super.initLayout();
+		}
+		private function animateFlapIndicator():void{
+			assets_game.mc_flap.x = ConfigValues.START_SCALE.width/2 - 20;
+			TweenMax.to(assets_game.mc_flap, 0.35, {x:ConfigValues.START_SCALE.width/2 + 20, repeat:-1, yoyo:true, ease:Circ.easeInOut});
 		}
 		override protected function init():void {
 			setupShakeDetection();
 			setupCompass();
+			
+			
+			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
+			assets_game.mc_dead_duck.visible = false;
+			
 			super.init();
 			register(true);
 			addEventListener( Event.ACTIVATE, activateHandler, false, 0, true );
 			addEventListener( Event.DEACTIVATE, deactivateHandler, false, 0, true );
 		}
-		
+		private function deadduck():void{
+			assets_game.mc_dead_duck.visible = true;
+			assets_game.mc_duck.visible = assets_game.mc_flap.visible = false;
+		}
+		private function onExit(e:MouseEvent):void{
+			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			TweenMax.to(this, 0.5, {x:-this.width*2});
+			TweenMax.delayedCall(0.5, onDispatchHome);
+		}
+		private function onDispatchHome():void{
+			dispatchEvent(new Event("HOME"));
+		}
 		private function setupCompass():void {
 			try
 			{
+				/* removed ane 
 				Compass.init( DEV_KEY );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_AVAILABLE, 		compass_magneticFieldAvailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UPDATED, 		compass_magneticFieldUpdatedHandler, false, 0, true );
 				Compass.service.addEventListener(CompassEvent.HEADING_UPDATED, onHeadingUpdated, false, 0, true );
+				removed ane */
 			}
 			catch (e:Error)
 			{
 				trace( "ERROR:"+e.message );
 			}
 		}
+		/* removed ane
 		private function onHeadingUpdated(e:CompassEvent):void{
 			message(String(e.magneticHeading));
 			assets_game.mc_north_arrow.rotation = e.magneticHeading;
-		}
+		}				
+		removed ane */
 		private function setupShakeDetection():void {
 			
 			if (Accelerometer.isSupported) {
@@ -79,9 +107,18 @@ package com.cttoronto.mobile.crackaquack.view
 			
 			if (Math.abs(e.accelerationX - lastAccelX) > 0.5 || Math.abs(e.accelerationY - lastAccelY) > 0.5  || Math.abs(e.accelerationZ - lastAccelZ) > 0.5 ) {
 				shaking = true;
+				
 				score ++;
 				assets_game.mc_duck.gotoAndPlay(2);
+				TweenMax.killTweensOf(assets_game.mc_flap);
+				TweenMax.to(assets_game.mc_flap, 0.5, {alpha:0});
+				
 			} else {
+				if (shaking == true){
+					TweenMax.killTweensOf(assets_game.mc_flap);
+					TweenMax.to(assets_game.mc_flap, 0.5, {alpha:1});
+					animateFlapIndicator();
+				}
 				shaking = false;
 			}
 			
@@ -103,6 +140,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			try
 			{
+				/* removed ane
 				if (Compass.isSupported)
 				{
 					if (reg && !_registered)
@@ -122,13 +160,14 @@ package com.cttoronto.mobile.crackaquack.view
 				{
 					message("not supported");
 				}
+				removed ane */
 			}
 			catch (e:Error)
 			{
 				message( "ERROR:"+e.message );
 			}
 		}
-		
+		/* removed ane
 		private function compass_headingUpdatedHandler( event:CompassEvent ):void
 		{
 			message( event.type +":"+ event.magneticHeading+":"+ event.trueHeading+":"+ event.headingAccuracy );
@@ -140,6 +179,7 @@ package com.cttoronto.mobile.crackaquack.view
 			//			_headingRaw.text = String(event.magneticHeading) +"   ["+event.headingAccuracy+"]";
 		}
 		
+		removed ane */
 		
 		private function activateHandler( event:Event ):void
 		{
@@ -151,7 +191,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			register(false) 	
 		}
-		
+		/* removed ane
 		
 		private function compass_magneticFieldUpdatedHandler( event:MagneticFieldEvent ):void
 		{
@@ -171,6 +211,7 @@ package com.cttoronto.mobile.crackaquack.view
 			message( "magnetic field unavailable" );
 		}
 
+		removed ane */
 		public function get score():int
 		{
 			return _score;

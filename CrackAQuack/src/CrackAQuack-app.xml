@@ -296,8 +296,5 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-	<extensions>
-        <extensionID>com.distriqt.Compass</extensionID>
-    <extensionID>com.adobe.Vibration</extensionID>
-    </extensions>
+	
 </application>

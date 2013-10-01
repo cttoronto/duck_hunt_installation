@@ -31,6 +31,9 @@ package com.cttoronto.mobile.crackaquack.view
 			super.init();
 			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.CLICK, onCancelClick);
 			assets_instructions.mc_btn_play.addEventListener(MouseEvent.CLICK, onPlayClick);
+			if(assets_instructions.mc_game_image){
+				assets_instructions.mc_game_image.addEventListener(MouseEvent.CLICK, onPlayClick);
+			}
 		}
 		private function onCancelClick(e:MouseEvent):void{
 			TweenMax.to(this, 0.5,{x:-this.width, onComplete:onExit});

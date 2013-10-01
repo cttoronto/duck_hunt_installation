@@ -32,6 +32,8 @@ package com.cttoronto.mobile.crackaquack.view
 			super.init();
 			assets_start.mc_btn_shoot.addEventListener(MouseEvent.MOUSE_UP, onShoot);
 			assets_start.mc_btn_fly.addEventListener(MouseEvent.MOUSE_UP, onFly);
+			
+			assets_start.mc_login_lightbox.visible = false;
 			//stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			//stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}

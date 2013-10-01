@@ -10,6 +10,7 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.events.FullScreenEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
 	import flash.system.System;
 	
@@ -25,21 +26,21 @@ package com.cttoronto.mobile.crackaquack.view
 			graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			scaleObject();
 		}
-		public function get screenDimensions():Point{
+		public function get screenDimensions():Rectangle{
 			//return new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
-			return new Point(stage.fullScreenWidth, stage.fullScreenHeight);
+			return DataModel.getInstance().deviceSize;
 		}
 		protected function scaleObject(target:DisplayObject = null):void {
 			if (target == null){
 				target = this;
 			}
-			target.scaleX = target.scaleY = screenDimensions.x/ConfigValues.START_SCALE.width;
-			if (target.scaleY*ConfigValues.START_SCALE.height > screenDimensions.y){
-				target.scaleX = target.scaleY = screenDimensions.y/ConfigValues.START_SCALE.height;
-				target.x = (screenDimensions.x -target.width)/2;
+			target.scaleX = target.scaleY = screenDimensions.width/ConfigValues.START_SCALE.width;
+			if (target.scaleY*ConfigValues.START_SCALE.height > screenDimensions.height){
+				target.scaleX = target.scaleY = screenDimensions.height/ConfigValues.START_SCALE.height;
+				target.x = (screenDimensions.width -target.width)/2;
 				target.y = 0;
-			} else if (target.scaleY*ConfigValues.START_SCALE.height < screenDimensions.y){
-				target.y = (screenDimensions.y/2 - (target.scaleX*ConfigValues.START_SCALE.height)/2);
+			} else if (target.scaleY*ConfigValues.START_SCALE.height < screenDimensions.height){
+				target.y = (screenDimensions.height/2 - (target.scaleX*ConfigValues.START_SCALE.height)/2);
 			}
 			return;
 			target.scaleX = target.scaleY = DataModel.getInstance().appScale;
@@ -61,7 +62,7 @@ package com.cttoronto.mobile.crackaquack.view
 		protected function init():void{
 			
 			var orig_x:Number = this.x;
-			x = screenDimensions.x;
+			x = screenDimensions.width;
 			
 //			TweenMax.to(this, 0.5, {x:(stage.fullScreenWidth-ConfigValues.START_SCALE.width)/2-(ConfigValues.START_SCALE.width/stage.fullScreenWidth)});
 //			x = DataModel.getInstance().appSize.width; //Capabilities.screenResolutionX;
