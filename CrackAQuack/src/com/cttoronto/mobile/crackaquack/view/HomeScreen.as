@@ -30,11 +30,28 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		override protected function init():void{
 			super.init();
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
-			stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
+			assets_start.mc_btn_shoot.addEventListener(MouseEvent.MOUSE_UP, onShoot);
+			assets_start.mc_btn_fly.addEventListener(MouseEvent.MOUSE_UP, onFly);
+			//stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			//stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
+		}
+		private function onShoot(e:MouseEvent):void{
+			assets_start.mc_btn_shoot.removeEventListener(MouseEvent.MOUSE_UP, onShoot);
+			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadShoot});
+		}
+		private function onFly(e:MouseEvent):void{
+			assets_start.mc_btn_fly.removeEventListener(MouseEvent.MOUSE_UP, onFly);
+			TweenMax.killDelayedCallsTo(onExit);
+			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadFly});
+		}
+		private function onLoadFly(e:Event = null):void{
+			dispatchEvent(new Event("INSTRUCTIONS_FLY"));			
+		}
+		private function onLoadShoot(e:Event = null):void{
+			dispatchEvent(new Event("INSTRUCTIONS_SHOOT"));
 		}
 		private function onExit(e:MouseEvent = null):void{
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			//stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			TweenMax.killDelayedCallsTo(onExit);
 			
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadGame});

@@ -88,6 +88,8 @@ package com.cttoronto.mobile.crackaquack.view {
 			vid_parent.addChild(vid);
 			zoom_slider = assets_game.mc_zoom_indicator;
 			
+			assets_game.mc_duck_calibration.visible = false;
+			
 			super.initLayout();
 			
 		}
@@ -156,9 +158,15 @@ package com.cttoronto.mobile.crackaquack.view {
 		private function onZoomMouseInteraction(e:MouseEvent):void{
 			if (e.type == MouseEvent.MOUSE_UP || e.type == MouseEvent.MOUSE_OUT){
 				zoom_drag = false;
+				 
+				assets_game.mc_duck_calibration.visible = false;
+				assets_game.mc_reticle.visible = true;
 //				zoom_slider.stopDrag();
 			}else if (e.type == MouseEvent.MOUSE_DOWN){
 				zoom_drag = true;
+				
+				assets_game.mc_reticle.visible = false;
+				assets_game.mc_duck_calibration.visible = true;
 				onMouseMove();
 			//	zoom_slider.startDrag(false, new Rectangle(zoom_slider.x,0,zoom_slider.x, this.height));
 			}

@@ -21,6 +21,8 @@ package com.cttoronto.mobile.crackaquack.view
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		protected function initLayout():void{
+			graphics.beginFill(0x00FF00, 0);
+			graphics.drawRect(0,0,ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			scaleObject();
 		}
 		public function get screenDimensions():Point{
