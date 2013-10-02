@@ -1,14 +1,12 @@
 package
 {
 	import com.cttoronto.mobile.crackaquack.Main;
-	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.geom.Rectangle;
 	
 	[SWF(backgroundColor="#000000")]
 	public class CrackAQuack extends Sprite
@@ -22,10 +20,6 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-//			CommunicationManager.getInstance().hit(0, "green");
-			
-//			CommunicationManager.getInstance().login("Brendan", "hunter");
-//			
 //			var guiSize:Rectangle = new Rectangle(0,0,1024, 600);
 //			var deviceSize:Rectangle = new Rectangle(0,0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight));
 //			var appScale:Number = 1;

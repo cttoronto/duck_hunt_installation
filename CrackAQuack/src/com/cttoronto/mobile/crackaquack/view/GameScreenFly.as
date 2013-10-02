@@ -33,6 +33,8 @@ package com.cttoronto.mobile.crackaquack.view
 		public static const DEV_KEY : String = "";
 		private var lastAccelX:Number = 0, lastAccelY:Number = 0, lastAccelZ:Number = 0;
 		
+		private var heading:Number = 0;
+		
 		private var shaking:Boolean = false;
 		
 		private var mc_arrow:MovieClip = new MovieClip();
@@ -121,12 +123,13 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		private function onHeadingRaw(e:CompassEvent):void{
 			message(String(e.magneticHeading));
+			heading = e.magneticHeading;
 			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}
 		/* removed ane start */
 		private function onHeadingUpdated(e:CompassEvent):void{
 			message(String(e.magneticHeading));
-			assets_game.mc_north_arrow.rotation = e.magneticHeading;
+//			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}				
 		/*end removed ane */
 		private function setupShakeDetection():void {
@@ -146,7 +149,7 @@ package com.cttoronto.mobile.crackaquack.view
 				assets_game.mc_duck.gotoAndPlay(2);
 				TweenMax.killTweensOf(assets_game.mc_flap);
 				TweenMax.to(assets_game.mc_flap, 0.5, {alpha:0});
-				CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, _score, DataModel.getInstance().color);
+				CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, _score, heading);
 			} else {
 				if (shaking == true){
 					TweenMax.killTweensOf(assets_game.mc_flap);

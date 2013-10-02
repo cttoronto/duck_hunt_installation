@@ -1,15 +1,11 @@
 package com.cttoronto.mobile.crackaquack.model
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
-	import com.cttoronto.mobile.crackaquack.events.BaseEvent;
-	import com.cultcreative.utils.Debug;
-	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import flash.utils.setTimeout;
 	
 	public class CommunicationManager extends EventDispatcher
 	{
