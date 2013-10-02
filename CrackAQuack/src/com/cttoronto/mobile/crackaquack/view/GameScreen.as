@@ -1,6 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view {
-	/* removed ane start */
+	/* removed ane start 
 	import com.adobe.nativeExtensions.Vibration;
+	/*end removed ane */
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
@@ -239,7 +240,7 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		
 		private function vibe(t:Number = 100):void{
-			/* removed ane start */
+			/* removed ane start 
 			var vibe:Vibration;
 			if (Vibration.isSupported) {
 				vibe = new Vibration();

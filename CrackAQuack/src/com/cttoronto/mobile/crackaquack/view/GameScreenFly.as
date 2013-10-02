@@ -3,9 +3,6 @@ package com.cttoronto.mobile.crackaquack.view
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
-	import com.distriqt.extension.compass.Compass;
-	import com.distriqt.extension.compass.events.CompassEvent;
-	import com.distriqt.extension.compass.events.MagneticFieldEvent;
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Circ;
 	import com.greensock.easing.Expo;
@@ -30,7 +27,7 @@ package com.cttoronto.mobile.crackaquack.view
 		private const APP_SIZE:Point = new Point(800, 480);
 		private var accl:Accelerometer;
 		private var _registered	: Boolean = false;
-		public static const DEV_KEY : String = "38d355d90452ac5ed03fa729eba38241e6b3f3f0MdD5JLwS5OuLhbN0jjSQ9txQKjC2uWUj2kj30dIhZQe5GuIMey/EDw1ZnOlc+CDwcaeKZElFwEzhxYfOYAB4zQ==";
+		public static const DEV_KEY : String = "";
 		private var lastAccelX:Number = 0, lastAccelY:Number = 0, lastAccelZ:Number = 0;
 		
 		private var heading:Number = 0;
@@ -42,7 +39,7 @@ package com.cttoronto.mobile.crackaquack.view
 		private var _score:int  = 0;
 		private var color_fill:MovieClip = new MovieClip();
 		private var score_timer:Timer = new Timer(1000);
-		
+		private var touching:Boolean = false;
 //		private var color_fill_flapmessage:MovieClip = new MovieClip();
 		public function GameScreenFly()
 		{
@@ -56,15 +53,10 @@ package com.cttoronto.mobile.crackaquack.view
 			
 			color_fill.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
 			color_fill.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
-//			color_fill_flapmessage.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
-//			color_fill_flapmessage.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			
 			assets_game.addChild(color_fill);
-//			assets_game.addChild(color_fill_flapmessage);
 			
 			color_fill.mask = assets_game.mc_duck;
-//			color_fill_flapmessage.mask = assets_game.mc_flap;
-//			color_fill_flapmessage.mask = assets_game.mc_dead_duck;
 			
 			super.initLayout();
 		}
@@ -74,8 +66,9 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		override protected function init():void {
 			setupShakeDetection();
+			/* removed ane start 
 			setupCompass();
-			
+			/*end removed ane */
 			
 			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
 			assets_game.mc_dead_duck.visible = false;
@@ -86,6 +79,27 @@ package com.cttoronto.mobile.crackaquack.view
 			addEventListener( Event.DEACTIVATE, deactivateHandler, false, 0, true );
 			score_timer.addEventListener(TimerEvent.TIMER, onTimer);
 			score_timer.start();
+			
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseInteraction);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseInteraction);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		private function onMouseInteraction(e:MouseEvent):void{
+			
+			if (e.type == MouseEvent.MOUSE_DOWN){
+				touching = true;
+			}else if (e.type == MouseEvent.MOUSE_UP){
+				touching = false;
+			}
+		}
+		private function onEnterFrame(e:Event):void{
+			if (touching == true){
+				var dx:Number = mouseX - ConfigValues.START_SCALE.width/2;
+				var dy:Number = mouseY - ConfigValues.START_SCALE.height/2;
+				var angle:Number = Math.atan2(dy, dx);
+				assets_game.mc_north_arrow.rotation = angle * (180 / Math.PI)+90;
+				heading = angle * (180 / Math.PI)+180;
+			}
 		}
 		private function onTimer(e:TimerEvent):void{
 			score++;
@@ -107,7 +121,7 @@ package com.cttoronto.mobile.crackaquack.view
 		private function setupCompass():void {
 			try
 			{
-				/* removed ane start */
+				/* removed ane start 
 				Compass.init( ConfigValues.DEV_KEY );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_AVAILABLE, 		compass_magneticFieldAvailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
@@ -121,12 +135,12 @@ package com.cttoronto.mobile.crackaquack.view
 				trace( "ERROR:"+e.message );
 			}
 		}
+		/* removed ane start 
 		private function onHeadingRaw(e:CompassEvent):void{
 			message(String(e.magneticHeading));
 			heading = e.magneticHeading;
 			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}
-		/* removed ane start */
 		private function onHeadingUpdated(e:CompassEvent):void{
 			message(String(e.magneticHeading));
 //			assets_game.mc_north_arrow.rotation = e.magneticHeading;
@@ -177,7 +191,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			try
 			{
-				/* removed ane start */
+				/* removed ane start 
 				if (Compass.isSupported)
 				{
 					if (reg && !_registered)
@@ -204,7 +218,7 @@ package com.cttoronto.mobile.crackaquack.view
 				message( "ERROR:"+e.message );
 			}
 		}
-		/* removed ane start */
+		/* removed ane start 
 		private function compass_headingUpdatedHandler( event:CompassEvent ):void
 		{
 			message( event.type +":"+ event.magneticHeading+":"+ event.trueHeading+":"+ event.headingAccuracy );
@@ -228,7 +242,7 @@ package com.cttoronto.mobile.crackaquack.view
 		{
 			register(false) 	
 		}
-		/* removed ane start */
+		/* removed ane start 
 		
 		private function compass_magneticFieldUpdatedHandler( event:MagneticFieldEvent ):void
 		{
