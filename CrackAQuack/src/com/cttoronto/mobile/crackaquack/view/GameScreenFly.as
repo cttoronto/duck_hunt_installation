@@ -29,7 +29,7 @@ package com.cttoronto.mobile.crackaquack.view
 		private const APP_SIZE:Point = new Point(800, 480);
 		private var accl:Accelerometer;
 		private var _registered	: Boolean = false;
-		public static const DEV_KEY : String = "";
+		public static const DEV_KEY : String = "38d355d90452ac5ed03fa729eba38241e6b3f3f0MdD5JLwS5OuLhbN0jjSQ9txQKjC2uWUj2kj30dIhZQe5GuIMey/EDw1ZnOlc+CDwcaeKZElFwEzhxYfOYAB4zQ==";
 		private var lastAccelX:Number = 0, lastAccelY:Number = 0, lastAccelZ:Number = 0;
 		
 		private var shaking:Boolean = false;
