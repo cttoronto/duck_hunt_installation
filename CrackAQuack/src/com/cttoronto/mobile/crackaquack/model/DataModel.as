@@ -23,7 +23,7 @@ package com.cttoronto.mobile.crackaquack.model
 	public class DataModel extends EventDispatcher
 	{
 		
-		private var _uid:int;
+		private var _uid:int = 0;
 		private var _color:uint;
 		
 		public static const IPHONE_1G:String = "iPhone1,1"; 

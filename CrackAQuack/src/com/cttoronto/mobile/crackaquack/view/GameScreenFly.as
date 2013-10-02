@@ -1,6 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.distriqt.extension.compass.Compass;
 	import com.distriqt.extension.compass.events.CompassEvent;
@@ -145,7 +146,7 @@ package com.cttoronto.mobile.crackaquack.view
 				assets_game.mc_duck.gotoAndPlay(2);
 				TweenMax.killTweensOf(assets_game.mc_flap);
 				TweenMax.to(assets_game.mc_flap, 0.5, {alpha:0});
-				
+				CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, _score, DataModel.getInstance().color);
 			} else {
 				if (shaking == true){
 					TweenMax.killTweensOf(assets_game.mc_flap);
