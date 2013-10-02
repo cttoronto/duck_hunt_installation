@@ -49,7 +49,6 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		private function onLoggedIn(e:Event):void {
 			
-			// TODO: set color of duck
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = JSON.parse(l.data);
 			
@@ -60,6 +59,8 @@ package com.cttoronto.mobile.crackaquack.model
 					DataModel.getInstance().color = ConfigValues.PLAYER_COLOR[json["user"].color];
 				}
 			} else {
+				// TODO: handle error for no ducks left
+				// TODO: handle error for user taken
 				trace("ERROR LOGGING IN " + json["message"]);
 			}
 			// {"result":"SUCCESS","user":{"userName":"sss","score":0,"ranking":0,"hits":0,"roomId":"demo","playerType":"duck","uid":0, "color": "green"}}
@@ -96,7 +97,7 @@ package com.cttoronto.mobile.crackaquack.model
 		private function onFly(e:Event):void {
 			var l:URLLoader = e.target as URLLoader;
 //			var data:Object = l.data;
-			trace(JSON.parse(l.data));
+//			trace(JSON.parse(l.data));
 		}
 		
 		// ******************************
@@ -114,24 +115,10 @@ package com.cttoronto.mobile.crackaquack.model
 		private function onHit(e:Event):void {
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = (JSON.parse(l.data));
-			trace(json.result, json.user.uid);
+//			trace(json.result, json.user.uid);
 			//{"result":"SUCCESS","user":{"__v":0,"_id":"524b5b378ceb21793b000001","active":true,"hits":6,"loggedIn":true,"password":"password","playerType":"hunter","ranking":1,"registered":"true","roomId":"demo","score":0,"socialId":0,"type":"","uid":0,"userName":"testUserName"}}
 		}
 		
-		public function submitScore(ARG_score:int, ARG_uid:String):void {
-			var req:URLRequest = new URLRequest(url + "/score/" + ARG_uid + "/" + ARG_score);
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, onScoreSubmitted);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
-			loader.load(req);
-		}
-		
-		
-		private function onScoreSubmitted(e:Event):void {
-			var l:URLLoader = e.target as URLLoader;
-			var data:Object = l.data;
-			
-		}
 		
 		private function onError(e:IOErrorEvent):void {
 			
