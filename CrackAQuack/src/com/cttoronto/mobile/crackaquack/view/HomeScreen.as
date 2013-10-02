@@ -1,11 +1,8 @@
 package com.cttoronto.mobile.crackaquack.view
 {
-	import com.cttoronto.mobile.crackaquack.view.components.Button;
 	import com.cttoronto.mobile.crackaquack.view.components.LoginRegistration;
 	import com.greensock.TweenMax;
 	
-	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
@@ -32,8 +29,6 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_start.mc_btn_shoot.addEventListener(MouseEvent.MOUSE_UP, onShoot);
 			assets_start.mc_btn_fly.addEventListener(MouseEvent.MOUSE_UP, onFly);
 			
-			view_login = new LoginRegistration();
-			addChild(view_login);
 			
 //			assets_start.mc_login_lightbox.tracer();
 //			assets_start.mc_login_lightbox.visible = false;
@@ -42,10 +37,28 @@ package com.cttoronto.mobile.crackaquack.view
 			//stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
 		private function onShoot(e:MouseEvent):void{
+			
+			view_login = new LoginRegistration("hunter");
+			addChild(view_login);
+			
+			view_login.addEventListener(Event.COMPLETE, onShootLoginComplete);
+			
+		}
+		
+		private function onShootLoginComplete(e:Event):void {
 			assets_start.mc_btn_shoot.removeEventListener(MouseEvent.MOUSE_UP, onShoot);
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadShoot});
 		}
+		
 		private function onFly(e:MouseEvent):void{
+			
+			view_login = new LoginRegistration("duck");
+			addChild(view_login);
+			
+			view_login.addEventListener(Event.COMPLETE, onFlyLoginComplete);
+			
+		}
+		private function onFlyLoginComplete(e:Event):void {
 			assets_start.mc_btn_fly.removeEventListener(MouseEvent.MOUSE_UP, onFly);
 			TweenMax.killDelayedCallsTo(onExit);
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadFly});
