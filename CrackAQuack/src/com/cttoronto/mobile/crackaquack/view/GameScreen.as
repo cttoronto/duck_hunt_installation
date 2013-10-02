@@ -2,22 +2,18 @@ package com.cttoronto.mobile.crackaquack.view {
 	/* removed ane start */
 	import com.adobe.nativeExtensions.Vibration;
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.greensock.TweenMax;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.sensors.Accelerometer;
@@ -325,6 +321,8 @@ package com.cttoronto.mobile.crackaquack.view {
 						//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 						//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
 						kills++;
+						
+						CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
 					}
 				}
 			}

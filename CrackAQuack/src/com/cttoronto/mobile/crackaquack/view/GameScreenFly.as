@@ -1,6 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.distriqt.extension.compass.Compass;
 	import com.distriqt.extension.compass.events.CompassEvent;
@@ -31,6 +32,8 @@ package com.cttoronto.mobile.crackaquack.view
 		private var _registered	: Boolean = false;
 		public static const DEV_KEY : String = "38d355d90452ac5ed03fa729eba38241e6b3f3f0MdD5JLwS5OuLhbN0jjSQ9txQKjC2uWUj2kj30dIhZQe5GuIMey/EDw1ZnOlc+CDwcaeKZElFwEzhxYfOYAB4zQ==";
 		private var lastAccelX:Number = 0, lastAccelY:Number = 0, lastAccelZ:Number = 0;
+		
+		private var heading:Number = 0;
 		
 		private var shaking:Boolean = false;
 		
@@ -105,7 +108,7 @@ package com.cttoronto.mobile.crackaquack.view
 			try
 			{
 				/* removed ane start */
-				Compass.init( DEV_KEY );
+				Compass.init( ConfigValues.DEV_KEY );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_AVAILABLE, 		compass_magneticFieldAvailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UPDATED, 		compass_magneticFieldUpdatedHandler, false, 0, true );
@@ -120,12 +123,13 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		private function onHeadingRaw(e:CompassEvent):void{
 			message(String(e.magneticHeading));
+			heading = e.magneticHeading;
 			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}
 		/* removed ane start */
 		private function onHeadingUpdated(e:CompassEvent):void{
 			message(String(e.magneticHeading));
-			assets_game.mc_north_arrow.rotation = e.magneticHeading;
+//			assets_game.mc_north_arrow.rotation = e.magneticHeading;
 		}				
 		/*end removed ane */
 		private function setupShakeDetection():void {
@@ -145,7 +149,7 @@ package com.cttoronto.mobile.crackaquack.view
 				assets_game.mc_duck.gotoAndPlay(2);
 				TweenMax.killTweensOf(assets_game.mc_flap);
 				TweenMax.to(assets_game.mc_flap, 0.5, {alpha:0});
-				
+				CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, _score, heading);
 			} else {
 				if (shaking == true){
 					TweenMax.killTweensOf(assets_game.mc_flap);

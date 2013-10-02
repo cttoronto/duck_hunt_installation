@@ -23,6 +23,9 @@ package com.cttoronto.mobile.crackaquack.model
 	public class DataModel extends EventDispatcher
 	{
 		
+		private var _uid:int = 0;
+		private var _color:uint;
+		
 		public static const IPHONE_1G:String = "iPhone1,1"; 
 		// first gen is 1,1 
 		public static const IPHONE_3G:String = "iPhone1"; 
@@ -62,6 +65,26 @@ package com.cttoronto.mobile.crackaquack.model
 		private var _loaded:Boolean = false;
 				
 		private var _path:String = '';				
+
+		public function get color():uint
+		{
+			return _color;
+		}
+
+		public function set color(value:uint):void
+		{
+			_color = value;
+		}
+
+		public function get uid():int
+		{
+			return _uid;
+		}
+
+		public function set uid(value:int):void
+		{
+			_uid = value;
+		}
 
 		public function get guiSize():Rectangle
 		{

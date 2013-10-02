@@ -1,5 +1,8 @@
 package com.cttoronto.mobile.crackaquack.view.components
 {
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
+	import com.cttoronto.mobile.crackaquack.model.DataModel;
+	
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -7,9 +10,11 @@ package com.cttoronto.mobile.crackaquack.view.components
 	public class LoginRegistration extends MovieClip
 	{
 		private var assets_login:mc_login_lightboxes;
+		private var type:String;
 		
-		public function LoginRegistration()
+		public function LoginRegistration(ARG_type:String)
 		{
+			type = ARG_type;
 			super();
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
@@ -19,7 +24,7 @@ package com.cttoronto.mobile.crackaquack.view.components
 			assets_login = new mc_login_lightboxes();
 			addChild(assets_login);
 			
-			assets_login.mc_btn_register.addEventListener(MouseEvent.MOUSE_UP, onRegister);
+//			assets_login.mc_btn_register.addEventListener(MouseEvent.MOUSE_UP, onRegister);
 			assets_login.mc_btn_login.addEventListener(MouseEvent.MOUSE_UP, onLogin);
 			
 			show_dialogue = false;
@@ -36,12 +41,25 @@ package com.cttoronto.mobile.crackaquack.view.components
 		}
 		private function onLogin(e:Event):void{
 //			destroy();
+			DataModel.getInstance().addEventListener("LOGIN_COMPLETE", onLoginComplete);
+			DataModel.getInstance().addEventListener("LOGIN_ERROR", onLoginError);
+			CommunicationManager.getInstance().login(assets_login.tf_username.text, type); 
 		}
+		
+		private function onLoginComplete(e:Event):void {
+			login_success(true);
+		}
+		
+		private function onLoginError(e:Event):void {
+			login_success(false);
+		}
+		
 		private function destroy():void{
 			
 		}
 		private function onClickLoginSuccessDialogue(e:MouseEvent):void{
 			this.visible = false;
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		private function set registration_success($success:Boolean):void{
 			show_dialogue = true;
@@ -60,9 +78,10 @@ package com.cttoronto.mobile.crackaquack.view.components
 				show_login_success = true;
 				assets_login.mc_login_bg.removeEventListener(MouseEvent.MOUSE_UP, onClickDialogue);
 				assets_login.mc_login_bg.addEventListener(MouseEvent.MOUSE_UP, onClickLoginSuccessDialogue);
-				
+				dispatchEvent(new Event(Event.COMPLETE));
 			}else if ($success == false){
 				show_login_failure = true;
+				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
 		private function set show_dialogue($show:Boolean):void{
