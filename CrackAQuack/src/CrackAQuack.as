@@ -1,6 +1,7 @@
 package
 {
 	import com.cttoronto.mobile.crackaquack.Main;
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	
 	import flash.display.Sprite;
@@ -20,6 +21,10 @@ package
 			// support autoOrients
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			
+//			CommunicationManager.getInstance().hit(0, "green");
+			
+//			CommunicationManager.getInstance().login("Brendan", "hunter");
 //			
 //			var guiSize:Rectangle = new Rectangle(0,0,1024, 600);
 //			var deviceSize:Rectangle = new Rectangle(0,0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight));

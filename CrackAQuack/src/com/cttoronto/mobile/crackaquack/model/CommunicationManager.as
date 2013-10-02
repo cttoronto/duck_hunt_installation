@@ -52,8 +52,23 @@ package com.cttoronto.mobile.crackaquack.model
 		}
 		
 		private function onLoggedIn(e:Event):void {
-			// TODO: set user id
+			
 			// TODO: set color of duck
+			var l:URLLoader = e.target as URLLoader;
+			var json:Object = JSON.parse(l.data);
+			
+			if (json.result == "SUCCESS") {
+				DataModel.getInstance().uid = json["user"].uid as int;
+				if (json["user"].playerType == "duck") {
+					// set the color
+					DataModel.getInstance().color = ConfigValues.PLAYER_COLOR[json["user"].color];
+				}
+			} else {
+				trace("ERROR LOGGING IN " + json["message"]);
+			}
+			// {"result":"SUCCESS","user":{"userName":"sss","score":0,"ranking":0,"hits":0,"roomId":"demo","playerType":"duck","uid":0, "color": "green"}}
+			// {"result":"ERROR","type":"JOIN_ROOM","message":"You are already in room: demo"}
+			
 		}
 
 		// ******************************
@@ -83,7 +98,9 @@ package com.cttoronto.mobile.crackaquack.model
 		}
 		
 		private function onFly(e:Event):void {
-			
+			var l:URLLoader = e.target as URLLoader;
+//			var data:Object = l.data;
+			trace(JSON.parse(l.data));
 		}
 		
 		// ******************************
@@ -99,7 +116,10 @@ package com.cttoronto.mobile.crackaquack.model
 		}
 		
 		private function onHit(e:Event):void {
-			
+			var l:URLLoader = e.target as URLLoader;
+			var json:Object = (JSON.parse(l.data));
+			trace(json.result, json.user.uid);
+			//{"result":"SUCCESS","user":{"__v":0,"_id":"524b5b378ceb21793b000001","active":true,"hits":6,"loggedIn":true,"password":"password","playerType":"hunter","ranking":1,"registered":"true","roomId":"demo","score":0,"socialId":0,"type":"","uid":0,"userName":"testUserName"}}
 		}
 		
 		public function submitScore(ARG_score:int, ARG_uid:String):void {

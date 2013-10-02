@@ -105,7 +105,7 @@ package com.cttoronto.mobile.crackaquack.view
 			try
 			{
 				/* removed ane start */
-				Compass.init( DEV_KEY );
+				Compass.init( ConfigValues.DEV_KEY );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_AVAILABLE, 		compass_magneticFieldAvailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UNAVAILABLE, 	compass_magneticFieldUnavailableHandler, false, 0, true );
 				Compass.service.addEventListener( MagneticFieldEvent.MAGNETIC_FIELD_UPDATED, 		compass_magneticFieldUpdatedHandler, false, 0, true );
