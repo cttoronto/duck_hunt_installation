@@ -1,6 +1,7 @@
 package com.cttoronto.mobile.crackaquack.view {
 	/* removed ane start 
 	import com.adobe.nativeExtensions.Vibration;
+	
 	/*end removed ane */
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
@@ -68,7 +69,7 @@ package com.cttoronto.mobile.crackaquack.view {
 		override protected function initLayout():void{
 			addChild(assets_game);
 			
-			for (var i = 0; i < assets_game.numChildren; i ++){
+			for (var i:Number = 0; i < assets_game.numChildren; i ++){
 				assets_game.getChildAt(i);
 				assets_game.cacheAsBitmap = true;
 			}

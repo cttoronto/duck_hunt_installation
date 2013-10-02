@@ -87,7 +87,7 @@ package com.cttoronto.mobile.crackaquack.view.components
 		private function set show_dialogue($show:Boolean):void{
 			assets_login.mc_login_bg.visible = $show;
 			if ($show == false){
-				show_login_success = show_login_failure = show_registration_failure = show_registration_success = false;
+				show_usernametaken = show_noducks = show_login_success = show_login_failure = show_registration_failure = show_registration_success = false;
 			}
 		}
 		private function set show_registration_success($show:Boolean):void{
@@ -101,6 +101,12 @@ package com.cttoronto.mobile.crackaquack.view.components
 		}
 		private function set show_login_failure($show:Boolean):void{
 			assets_login.mc_dialogue_incorrect.visible = $show;
+		}
+		private function set show_usernametaken($show:Boolean):void{
+			assets_login.mc_dialogue_usernametaken.visible = $show;
+		}
+		private function set show_noducks($show:Boolean):void{
+			assets_login.mc_dialogue_noducks.visible = $show;
 		}
 	}
 }
