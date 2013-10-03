@@ -47,7 +47,11 @@ package com.cttoronto.mobile.crackaquack.view
 		
 		private function onShootLoginComplete(e:Event):void {
 			assets_start.mc_btn_shoot.removeEventListener(MouseEvent.MOUSE_UP, onShoot);
-			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadShoot});
+			if (stage) {
+				TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadShoot});
+			} else {
+				onLoadShoot();
+			}
 		}
 		
 		private function onFly(e:MouseEvent):void{
@@ -61,7 +65,11 @@ package com.cttoronto.mobile.crackaquack.view
 		private function onFlyLoginComplete(e:Event):void {
 			assets_start.mc_btn_fly.removeEventListener(MouseEvent.MOUSE_UP, onFly);
 			TweenMax.killDelayedCallsTo(onExit);
-			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadFly});
+			if (stage) {
+				TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadFly});
+			} else {
+				onLoadFly();
+			}
 		}
 		private function onLoadFly(e:Event = null):void{
 			dispatchEvent(new Event("INSTRUCTIONS_FLY"));			

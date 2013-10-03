@@ -116,10 +116,11 @@ package com.cttoronto.mobile.crackaquack.view
 			score++;
 		}
 		private function deadduck(e:Event = null):void{
+			
 			score_timer.stop();
 			score_timer.removeEventListener(TimerEvent.TIMER, onTimer);
 			assets_game.mc_dead_duck.visible = true;
-			assets_game.mc_duck.visible = assets_game.mc_flap.visible = false;
+			assets_game.mc_duck.visible = assets_game.mc_flap.visible = color_fill.visible = false;
 			
 			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
 			

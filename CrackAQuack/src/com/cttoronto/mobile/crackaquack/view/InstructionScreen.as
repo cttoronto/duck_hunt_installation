@@ -32,10 +32,10 @@ package com.cttoronto.mobile.crackaquack.view
 		
 		override protected function init():void{
 			super.init();
-			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.CLICK, onCancelClick);
-			assets_instructions.mc_btn_play.addEventListener(MouseEvent.CLICK, onPlayClick);
+			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.MOUSE_UP, onCancelClick);
+			assets_instructions.mc_btn_play.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
 			if(assets_instructions.mc_game_image){
-				assets_instructions.mc_game_image.addEventListener(MouseEvent.CLICK, onPlayClick);
+				assets_instructions.mc_game_image.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
 			}
 		}
 		
@@ -58,8 +58,8 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		
 		override public function destroy():void{
-			assets_instructions.mc_btn_cancel.removeEventListener(MouseEvent.CLICK, onCancelClick);
-			assets_instructions.mc_btn_play.removeEventListener(MouseEvent.CLICK, onPlayClick);
+			assets_instructions.mc_btn_cancel.removeEventListener(MouseEvent.MOUSE_UP, onCancelClick);
+			assets_instructions.mc_btn_play.removeEventListener(MouseEvent.MOUSE_UP, onPlayClick);
 			super.destroy();
 		}
 		

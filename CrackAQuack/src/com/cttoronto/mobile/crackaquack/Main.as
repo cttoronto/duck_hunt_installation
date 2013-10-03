@@ -93,10 +93,11 @@ package com.cttoronto.mobile.crackaquack
 		}
 		
 		private function removeHome():void {
-			homeScreen.removeEventListener("INSTRUCTIONS", onInstructionsLoad);
+		
+			homeScreen.removeEventListener("INSTRUCTIONS", onInstructionsLoad);		
 			removeChild(homeScreen);
-			
 			homeScreen.destroy();
+		
 			homeScreen = null;
 		}
 		private function onHomeLoad(e:Event):void {

@@ -32,12 +32,12 @@ package com.cttoronto.mobile.crackaquack.view
 		override protected function init():void{
 			super.init();
 			TweenMax.delayedCall(5.5, onExit);
-			stage.addEventListener(MouseEvent.CLICK, onExit);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
 		private function onExit(e:MouseEvent = null):void{
 			TweenMax.killDelayedCallsTo(onExit);
 			
-			stage.removeEventListener(MouseEvent.CLICK, onExit);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadHome});
 		}

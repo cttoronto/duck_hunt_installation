@@ -158,7 +158,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
 			
 			if (!Accelerometer.isSupported){
-				assets_game.mc_reload.addEventListener(MouseEvent.CLICK, reloadRounds);
+				assets_game.mc_reload.addEventListener(MouseEvent.MOUSE_UP, reloadRounds);
 			}
 			//zoom_slider.x = this.width - zoom_slider.width;
 			
