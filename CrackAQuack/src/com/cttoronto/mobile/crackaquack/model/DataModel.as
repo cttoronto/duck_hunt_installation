@@ -25,6 +25,8 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		private var _uid:int = 0;
 		private var _color:uint;
+		private var _toleranceHigh:int = 90;
+		private var _toleranceLow:int = 90;
 		
 		public static const IPHONE_1G:String = "iPhone1,1"; 
 		// first gen is 1,1 
@@ -66,6 +68,25 @@ package com.cttoronto.mobile.crackaquack.model
 				
 		private var _path:String = '';				
 
+		public function get toleranceLow():int
+		{
+			return _toleranceLow;
+		}
+
+		public function set toleranceLow(value:int):void
+		{
+			_toleranceLow = value;
+		}
+
+		public function get toleranceHigh():int
+		{
+			return _toleranceHigh;
+		}
+
+		public function set toleranceHigh(value:int):void
+		{
+			_toleranceHigh = value;
+		}
 		public function get color():uint
 		{
 			return _color;
@@ -174,15 +195,15 @@ package com.cttoronto.mobile.crackaquack.model
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, loadXMLComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, xmlLoadError);
-			loader.load(new URLRequest(path + ARG_xmlFile));	
+			loader.load(new URLRequest("http://ewe.insomniacbychoice.com/data.json"));	
 		}
 		
 		private function xmlLoadError(ARG_evt:IOErrorEvent):void {
 		
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, loadXMLComplete);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, xmlLoadError);
-			loader.load(new URLRequest("data/content.xml"));	
+//			var loader:URLLoader = new URLLoader();
+//			loader.addEventListener(Event.COMPLETE, loadXMLComplete);
+//			loader.addEventListener(IOErrorEvent.IO_ERROR, xmlLoadError);
+//			loader.load(new URLRequest("data/content.xml"));	
 		
 		}
 		
@@ -198,13 +219,16 @@ package com.cttoronto.mobile.crackaquack.model
 			
 			_loaded = true;
 			XML.ignoreWhitespace = true;
+			var l:URLLoader = URLLoader(ARG_event.currentTarget);
 			
 			// get the loaded xml
-			_xmlData = new XML(ARG_event.target.data);
-			
+			//_xmlData = new XML(ARG_event.target.data);
+			var json:Object = JSON.parse(l.data);
 			// dispatch the loaded event
-			var _evt:Event = new Event(Event.INIT);
-			dispatchEvent(_evt);
+			
+			if (!isNaN(json.toleranceHigh)) instance.toleranceHigh = json.toleranceHigh as int;
+			if (!isNaN(json.toleranceLow)) instance.toleranceLow = json.toleranceLow as int;
+			
 			
 		}
 
@@ -221,9 +245,11 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		public static function getDevice():String { 
 			var info:Array = Capabilities.os.split(" "); 
+			
 			if (String(info[1]).indexOf("cyanogen")!= -1) { 
 				return String(info[1]); 
 			} 
+			
 			if (info[0] + " " + info[1] != "iPhone OS") { 
 				return UNKNOWN; 
 			} 

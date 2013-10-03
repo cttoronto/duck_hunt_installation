@@ -388,14 +388,17 @@ package com.cttoronto.mobile.crackaquack.view {
 			//	tf.text += "\n" + stage.stageWidth + " " + stage.stageHeight + " " + vid.width + " " + vid.height+ " " + mouseX + " " + mouseY;
 		}
 		private function checkTargColor(samplepixel:Object):Object{
-			var colorTolerance:Number = 90;
-			if (samplepixel.r >colorTolerance && samplepixel.g < colorTolerance&& samplepixel.b >colorTolerance){
+			
+			var highTolerance:Number = DataModel.getInstance().toleranceHigh;
+			var lowTolerance:Number = DataModel.getInstance().toleranceLow;
+			
+			if (samplepixel.r > highTolerance && samplepixel.g < lowTolerance&& samplepixel.b >highTolerance){
 				return {hit:true, color:0xFF00FF, colorname:"Magenta"};
-			} else if (samplepixel.r >colorTolerance&& samplepixel.g > colorTolerance&& samplepixel.b <colorTolerance){
+			} else if (samplepixel.r >highTolerance&& samplepixel.g > highTolerance&& samplepixel.b <lowTolerance){
 				return {hit:true, color:0xFFFF00, colorname:"Yellow"};
-			}else if (samplepixel.r >colorTolerance&& samplepixel.g < colorTolerance&& samplepixel.b <colorTolerance){
+			}else if (samplepixel.r >highTolerance&& samplepixel.g < lowTolerance&& samplepixel.b <lowTolerance){
 				return {hit:true, color:0xFF0000, colorname:"Red"};
-			}else if (samplepixel.r <colorTolerance&& samplepixel.g > colorTolerance && samplepixel.b <colorTolerance){
+			}else if (samplepixel.r <lowTolerance&& samplepixel.g > highTolerance && samplepixel.b < lowTolerance){
 				return {hit:true, color:0x00FF00, colorname:"Green"};
 			}
 			return {hit:false};

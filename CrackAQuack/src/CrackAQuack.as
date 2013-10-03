@@ -23,7 +23,7 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			DataModel.getInstance().setScaling(stage);
-			
+			DataModel.getInstance().loadXML("");
 			NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE , handleDeactivate, false, 0, true);
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
