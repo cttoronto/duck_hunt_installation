@@ -2,9 +2,12 @@ package com.cttoronto.mobile.crackaquack.view
 {
 	import com.greensock.TweenMax;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
 
 	public class InstructionScreen extends MasterView
 	{		
@@ -34,8 +37,17 @@ package com.cttoronto.mobile.crackaquack.view
 			super.init();
 			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.MOUSE_UP, onCancelClick);
 			assets_instructions.mc_btn_play.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
+			
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_UP, onKey);
+			
 			if(assets_instructions.mc_game_image){
 				assets_instructions.mc_game_image.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
+			}
+		}
+		
+		private function onKey(e:KeyboardEvent):void {
+			if (e.keyCode == Keyboard.BACK) {
+				onCancelClick(null);
 			}
 		}
 		
@@ -44,6 +56,12 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		
 		private function onExit():void{
+			
+			assets_instructions.mc_btn_cancel.removeEventListener(MouseEvent.MOUSE_UP, onCancelClick);
+			assets_instructions.mc_btn_play.removeEventListener(MouseEvent.MOUSE_UP, onPlayClick);
+			
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_UP, onKey);
+			
 			dispatchEvent(new Event("CANCEL"));
 		}
 		

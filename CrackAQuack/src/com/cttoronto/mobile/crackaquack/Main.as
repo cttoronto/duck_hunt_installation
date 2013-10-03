@@ -6,7 +6,6 @@ package com.cttoronto.mobile.crackaquack
 	import com.cttoronto.mobile.crackaquack.view.InstructionScreen;
 	import com.cttoronto.mobile.crackaquack.view.IntroScreen;
 	import com.cttoronto.mobile.crackaquack.view.MasterView;
-	import com.cultcreative.utils.Debug;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -26,11 +25,6 @@ package com.cttoronto.mobile.crackaquack
 		private function onAdded(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 		
-			/*
-			gameScreen = new GameScreen();
-			gameScreen.addEventListener("HOME", onGameHomeLoad);
-			addChild(gameScreen);
-			*/
 			showIntro();
 		}
 		private function showIntro():void{
@@ -40,9 +34,9 @@ package com.cttoronto.mobile.crackaquack
 		}
 		private function removeIntro():void {
 			introScreen.removeEventListener("HOME", onHomeLoad);
+			introScreen.destroy();
 			removeChild(introScreen);
 			
-			introScreen.destroy();
 			introScreen = null;
 		}
 		
@@ -78,9 +72,12 @@ package com.cttoronto.mobile.crackaquack
 		private function removeInstructions():void {
 			instructionScreen.removeEventListener("CANCEL", onInstructionHomeLoad);
 			instructionScreen.removeEventListener("START", onStartLoad);
+			
+			instructionScreen.removeEventListener("START_FLY", onStartLoad);
+			instructionScreen.removeEventListener("START_SHOOT", onStartLoad);
+			instructionScreen.destroy();
 			removeChild(instructionScreen);
 			
-			instructionScreen.destroy();
 			instructionScreen = null;
 		}
 		private function showHome():void {
@@ -93,11 +90,12 @@ package com.cttoronto.mobile.crackaquack
 		}
 		
 		private function removeHome():void {
-		
-			homeScreen.removeEventListener("INSTRUCTIONS", onInstructionsLoad);		
-			removeChild(homeScreen);
-			homeScreen.destroy();
-		
+			if (homeScreen) {
+				homeScreen.removeEventListener("INSTRUCTIONS", onInstructionsLoad);		
+				homeScreen.removeEventListener("INSTRUCTIONS_SHOOT", onInstructionsLoadShoot);
+				homeScreen.destroy();
+				removeChild(homeScreen);
+			}
 			homeScreen = null;
 		}
 		private function onHomeLoad(e:Event):void {
@@ -137,9 +135,8 @@ package com.cttoronto.mobile.crackaquack
 		}
 		private function removeGame():void{
 			gameScreen.removeEventListener("HOME", onGameHomeLoad)
-			removeChild(gameScreen);
-			
 			gameScreen.destroy();
+			removeChild(gameScreen);
 			gameScreen = null;
 		}
 		private function onAboutLoad(e:Event):void {

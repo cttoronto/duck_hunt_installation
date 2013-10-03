@@ -3,8 +3,11 @@ package com.cttoronto.mobile.crackaquack.view
 	import com.cttoronto.mobile.crackaquack.view.components.LoginRegistration;
 	import com.greensock.TweenMax;
 	
+	import flash.desktop.NativeApplication;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
 	
 	public class HomeScreen extends MasterView
 	{
@@ -26,9 +29,9 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		override protected function init():void{
 			super.init();
+			
 			assets_start.mc_btn_shoot.addEventListener(MouseEvent.MOUSE_UP, onShoot);
 			assets_start.mc_btn_fly.addEventListener(MouseEvent.MOUSE_UP, onFly);
-			
 			
 //			assets_start.mc_login_lightbox.tracer();
 //			assets_start.mc_login_lightbox.visible = false;
@@ -36,16 +39,20 @@ package com.cttoronto.mobile.crackaquack.view
 			//stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			//stage.addEventListener(MouseEvent.MOUSE_UP, onExit);
 		}
+		
+		
+		
 		private function onShoot(e:MouseEvent):void{
 			
 			view_login = new LoginRegistration("hunter");
 			addChild(view_login);
 			
 			view_login.addEventListener(Event.COMPLETE, onShootLoginComplete);
-			
+			view_login.addEventListener("CANCEL", onHome);
 		}
 		
 		private function onShootLoginComplete(e:Event):void {
+			assets_start.mc_btn_fly.removeEventListener(MouseEvent.MOUSE_UP, onFly);
 			assets_start.mc_btn_shoot.removeEventListener(MouseEvent.MOUSE_UP, onShoot);
 			if (stage) {
 				TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadShoot});
@@ -64,12 +71,17 @@ package com.cttoronto.mobile.crackaquack.view
 		}
 		private function onFlyLoginComplete(e:Event):void {
 			assets_start.mc_btn_fly.removeEventListener(MouseEvent.MOUSE_UP, onFly);
+			assets_start.mc_btn_shoot.removeEventListener(MouseEvent.MOUSE_UP, onShoot);
+			
 			TweenMax.killDelayedCallsTo(onExit);
 			if (stage) {
 				TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadFly});
 			} else {
 				onLoadFly();
 			}
+		}
+		private function onHome(e:Event = null) :void {
+			dispatchEvent(new Event("HOME"));
 		}
 		private function onLoadFly(e:Event = null):void{
 			dispatchEvent(new Event("INSTRUCTIONS_FLY"));			
@@ -82,6 +94,9 @@ package com.cttoronto.mobile.crackaquack.view
 			TweenMax.killDelayedCallsTo(onExit);
 			
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadGame});
+			
+			view_login.removeEventListener(Event.COMPLETE, onShootLoginComplete);
+			view_login.removeEventListener("CANCEL", onHome);
 		}
 		protected function onLoadGame(event:MouseEvent = null):void
 		{

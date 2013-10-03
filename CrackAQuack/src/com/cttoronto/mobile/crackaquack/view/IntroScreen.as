@@ -2,12 +2,8 @@ package com.cttoronto.mobile.crackaquack.view
 {
 	import com.greensock.TweenMax;
 	
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.system.Capabilities;
-	
-	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	
 	public class IntroScreen extends MasterView
 	{
