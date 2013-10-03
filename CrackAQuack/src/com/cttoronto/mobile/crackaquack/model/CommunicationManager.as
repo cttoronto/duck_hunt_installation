@@ -1,6 +1,7 @@
 package com.cttoronto.mobile.crackaquack.model
 {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -40,6 +41,7 @@ package com.cttoronto.mobile.crackaquack.model
 		public function login(ARG_uid:String, ARG_type:String):void {
 			
 			var req:URLRequest = new URLRequest(url + "/userName/" + ARG_uid + "/roomId/" + ConfigValues.ROOM_ID + "/playerType/" + ARG_type);
+			trace(req.url);
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onLoggedIn);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
@@ -51,17 +53,20 @@ package com.cttoronto.mobile.crackaquack.model
 			
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = JSON.parse(l.data);
-			
+			trace(json.result);
 			if (json.result == "SUCCESS") {
 				DataModel.getInstance().uid = json["user"].uid as int;
 				if (json["user"].playerType == "duck") {
 					// set the color
 					DataModel.getInstance().color = ConfigValues.PLAYER_COLOR[json["user"].color];
+//					trace(DataModel.getInstance().color);
 				}
+				DataModel.getInstance().dispatchEvent(new Event("LOGIN_COMPLETE"));
 			} else {
 				// TODO: handle error for no ducks left
 				// TODO: handle error for user taken
 				trace("ERROR LOGGING IN " + json["message"]);
+				DataModel.getInstance().dispatchEvent(new Event("LOGIN_ERROR"));
 			}
 			// {"result":"SUCCESS","user":{"userName":"sss","score":0,"ranking":0,"hits":0,"roomId":"demo","playerType":"duck","uid":0, "color": "green"}}
 			// {"result":"ERROR","type":"JOIN_ROOM","message":"You are already in room: demo"}
@@ -96,8 +101,13 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		private function onFly(e:Event):void {
 			var l:URLLoader = e.target as URLLoader;
-//			var data:Object = l.data;
-//			trace(JSON.parse(l.data));
+			var json:Object = JSON.parse(l.data);
+			
+			if (json.result == "SUCCESS") {
+				if (json["user"].dead == true) {
+					DataModel.getInstance().dispatchEvent(new Event("DUCK_DIED"));
+				}
+			}
 		}
 		
 		// ******************************
@@ -121,7 +131,8 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		
 		private function onError(e:IOErrorEvent):void {
-			
+			trace("io error");
+			DataModel.getInstance().dispatchEvent(new Event("LOGIN_ERROR"));
 		}
 		
 		

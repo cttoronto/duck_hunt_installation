@@ -1,18 +1,19 @@
 package com.cttoronto.mobile.crackaquack.view {
-	/* removed ane start 
+	//* 
 	import com.adobe.nativeExtensions.Vibration;
-	
-	/*end removed ane */
+	//*/
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	import com.greensock.TweenMax;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -22,6 +23,7 @@ package com.cttoronto.mobile.crackaquack.view {
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.ui.Keyboard;
 	
 	public class GameScreen extends MasterView {
 		
@@ -56,8 +58,8 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		private var zoom_hit:mc_transparent_pixel = new mc_transparent_pixel();
 		
-		private var zoom_percent_max:Number = 1.5;
-		private var zoom_percent_min:Number = 0.5;
+		private var zoom_percent_max:Number = 1.75;
+		private var zoom_percent_min:Number = 0.75;
 		
 		private var vid_startScale:Number = 2.5;
 		
@@ -174,7 +176,19 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			assets_game.addChild(assets_game.mc_reload);
 			assets_game.addChild(assets_game.mc_btn_endgame);
+			
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKey, false, 0, true);
+			
 		}
+		
+		private function onKey(e:KeyboardEvent):void {
+			if (e.keyCode == Keyboard.BACK) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				this.onExit(null);
+			}
+		}
+		
 		private function onZoomMouseInteraction(e:MouseEvent):void{
 			if (e.type == MouseEvent.MOUSE_UP || e.type == MouseEvent.MOUSE_OUT){
 				zoom_drag = false;
@@ -216,6 +230,8 @@ package com.cttoronto.mobile.crackaquack.view {
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onClick);
 			TweenMax.to(this, 0.5, {x:-this.width*2});
 			TweenMax.delayedCall(0.5, onDispatchHome);
+			
+			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
 		}
 		
 		private function onDispatchHome():void{
@@ -241,7 +257,7 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		
 		private function vibe(t:Number = 100):void{
-			/* removed ane start 
+			//* removed ane start 
 			var vibe:Vibration;
 			if (Vibration.isSupported) {
 				vibe = new Vibration();
@@ -325,6 +341,39 @@ package com.cttoronto.mobile.crackaquack.view {
 						kills++;
 						
 						CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
+						return;
+					}
+				}
+				
+				samplepixel = hexToRGB(samplebmpd.getPixel(50,25));
+				duckCheck = checkTargColor(samplepixel)
+				if (duckCheck.hit){
+					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+					duckCheck = checkTargColor(samplepixel)
+					if (duckCheck.hit){
+						samplepixel = hexToRGB(samplebmpd.getPixel(50, 0));
+						//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+						//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
+						kills++;
+						
+						CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
+						return;
+					}
+				}
+				
+				samplepixel = hexToRGB(samplebmpd.getPixel(75, 50));
+				duckCheck = checkTargColor(samplepixel)
+				if (duckCheck.hit){
+					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+					duckCheck = checkTargColor(samplepixel)
+					if (duckCheck.hit){
+						samplepixel = hexToRGB(samplebmpd.getPixel(99, 50));
+						//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+						//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
+						kills++;
+						
+						CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
+						return;
 					}
 				}
 			}
@@ -339,13 +388,14 @@ package com.cttoronto.mobile.crackaquack.view {
 			//	tf.text += "\n" + stage.stageWidth + " " + stage.stageHeight + " " + vid.width + " " + vid.height+ " " + mouseX + " " + mouseY;
 		}
 		private function checkTargColor(samplepixel:Object):Object{
-			if (samplepixel.r >180 && samplepixel.g < 153 && samplepixel.b >180){
+			var colorTolerance:Number = 90;
+			if (samplepixel.r >colorTolerance && samplepixel.g < colorTolerance&& samplepixel.b >colorTolerance){
 				return {hit:true, color:0xFF00FF, colorname:"Magenta"};
-			} else if (samplepixel.r >180 && samplepixel.g > 180 && samplepixel.b <153 ){
+			} else if (samplepixel.r >colorTolerance&& samplepixel.g > colorTolerance&& samplepixel.b <colorTolerance){
 				return {hit:true, color:0xFFFF00, colorname:"Yellow"};
-			}else if (samplepixel.r >180 && samplepixel.g < 154 && samplepixel.b <153 ){
+			}else if (samplepixel.r >colorTolerance&& samplepixel.g < colorTolerance&& samplepixel.b <colorTolerance){
 				return {hit:true, color:0xFF0000, colorname:"Red"};
-			}else if (samplepixel.r <153 && samplepixel.g > 180 && samplepixel.b <153 ){
+			}else if (samplepixel.r <colorTolerance&& samplepixel.g > colorTolerance && samplepixel.b <colorTolerance){
 				return {hit:true, color:0x00FF00, colorname:"Green"};
 			}
 			return {hit:false};

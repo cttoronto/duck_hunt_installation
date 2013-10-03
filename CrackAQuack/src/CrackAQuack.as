@@ -1,8 +1,10 @@
 package
 {
 	import com.cttoronto.mobile.crackaquack.Main;
+	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -20,32 +22,16 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-//			var guiSize:Rectangle = new Rectangle(0,0,1024, 600);
-//			var deviceSize:Rectangle = new Rectangle(0,0, Math.max(stage.fullScreenWidth, stage.fullScreenHeight), Math.min(stage.fullScreenWidth, stage.fullScreenHeight));
-//			var appScale:Number = 1;
-//			var appSize:Rectangle = guiSize.clone();
-//			var appLeftOffset:Number = 0;
-//			
-//			if ((deviceSize.width / deviceSize.height) > (guiSize.width / guiSize.height)) {
-//				appScale = deviceSize.height / guiSize.height;
-//				appSize.width = deviceSize.width / appScale;
-//				appLeftOffset = Math.round((appSize.width - guiSize.width) / 2);
-//			} else {
-//				appScale = deviceSize.width / guiSize.width;
-//				appSize.height = deviceSize.height / appScale;
-//				appLeftOffset = 0;
-//			}
-////			
-////			base.scale = appScale;
-////			base.map.x = 0;
-////			base.menus.x = appLeftOffset;
-////			base.scrollRect - appSize;
-//			
-
 			DataModel.getInstance().setScaling(stage);
+			
+			NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE , handleDeactivate, false, 0, true);
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 			
+		}
+		
+		private function handleDeactivate(e:Event):void {
+			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
 		}
 		
 		private function onAdded(e:Event):void {

@@ -31,7 +31,7 @@ package com.cttoronto.mobile.crackaquack.view.components
 			
 			assets_login.mc_login_bg.addEventListener(MouseEvent.MOUSE_UP, onClickDialogue);
 			
-			login_success = true;
+			//login_success = true;
 		}
 		private function onClickDialogue(e:MouseEvent):void{
 			show_dialogue = false;
@@ -41,17 +41,32 @@ package com.cttoronto.mobile.crackaquack.view.components
 		}
 		private function onLogin(e:Event):void{
 //			destroy();
-			DataModel.getInstance().addEventListener("LOGIN_COMPLETE", onLoginComplete);
-			DataModel.getInstance().addEventListener("LOGIN_ERROR", onLoginError);
-			CommunicationManager.getInstance().login(assets_login.tf_username.text, type); 
+			
+			if (assets_login.tf_username.text != "") {
+				assets_login.mc_btn_login.removeEventListener(MouseEvent.MOUSE_UP, onLogin);
+//				trace("TRYING TO LOG IN", assets_login.tf_username.text, type);
+				assets_login.mc_btn_login.alpha = 0.5;
+				
+				DataModel.getInstance().addEventListener("LOGIN_COMPLETE", onLoginComplete);
+				DataModel.getInstance().addEventListener("LOGIN_ERROR", onLoginError);
+				CommunicationManager.getInstance().login(assets_login.tf_username.text, type);
+			}else {
+				show_dialogue = false;
+				show_login_failure = true;
+				assets_login.mc_btn_login.addEventListener(MouseEvent.MOUSE_UP, onLogin);
+				//				trace("TRYING TO LOG IN", assets_login.tf_username.text, type);
+				assets_login.mc_btn_login.alpha = 1;
+			}
 		}
 		
 		private function onLoginComplete(e:Event):void {
-			login_success(true);
+			login_success = true;
 		}
 		
 		private function onLoginError(e:Event):void {
-			login_success(false);
+			login_success = false;
+			assets_login.mc_btn_login.addEventListener(MouseEvent.MOUSE_UP, onLogin);
+			assets_login.mc_btn_login.alpha = 1;
 		}
 		
 		private function destroy():void{
@@ -75,13 +90,13 @@ package com.cttoronto.mobile.crackaquack.view.components
 			show_dialogue = true;
 			
 			if ($success == true){
-				show_login_success = true;
+//				show_login_success = true;
 				assets_login.mc_login_bg.removeEventListener(MouseEvent.MOUSE_UP, onClickDialogue);
-				assets_login.mc_login_bg.addEventListener(MouseEvent.MOUSE_UP, onClickLoginSuccessDialogue);
+//				assets_login.mc_login_bg.addEventListener(MouseEvent.MOUSE_UP, onClickLoginSuccessDialogue);
 				dispatchEvent(new Event(Event.COMPLETE));
 			}else if ($success == false){
 				show_login_failure = true;
-				dispatchEvent(new Event(Event.COMPLETE));
+//				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
 		private function set show_dialogue($show:Boolean):void{
@@ -97,6 +112,7 @@ package com.cttoronto.mobile.crackaquack.view.components
 			assets_login.mc_dialogue_reg_incorrect.visible = $show;
 		}
 		private function set show_login_success($show:Boolean):void{
+		
 			assets_login.mc_dialogue_correct.visible = $show;
 		}
 		private function set show_login_failure($show:Boolean):void{

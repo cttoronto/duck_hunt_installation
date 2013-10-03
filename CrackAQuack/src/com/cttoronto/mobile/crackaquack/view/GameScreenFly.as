@@ -7,17 +7,16 @@ package com.cttoronto.mobile.crackaquack.view
 	import com.greensock.easing.Circ;
 	import com.greensock.easing.Expo;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.MovieClip;
-	import flash.display.Screen;
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.sensors.Accelerometer;
+	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 
@@ -51,7 +50,7 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_game.graphics.beginFill(0x000000,0);
 			assets_game.graphics.drawRect(0,0,ConfigValues.START_SCALE.width,ConfigValues.START_SCALE.height);
 			
-			color_fill.graphics.beginFill(ConfigValues.PLAYER_COLOR.green, 1);
+			color_fill.graphics.beginFill(DataModel.getInstance().color, 1);
 			color_fill.graphics.drawRect(0,0, ConfigValues.START_SCALE.width, ConfigValues.START_SCALE.height);
 			
 			assets_game.addChild(color_fill);
@@ -73,6 +72,8 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_game.mc_btn_endgame.addEventListener(MouseEvent.MOUSE_UP, onExit);
 			assets_game.mc_dead_duck.visible = false;
 			
+			DataModel.getInstance().addEventListener("DUCK_DIED", deadduck);
+			
 			super.init();
 			register(true);
 			addEventListener( Event.ACTIVATE, activateHandler, false, 0, true );
@@ -83,6 +84,16 @@ package com.cttoronto.mobile.crackaquack.view
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseInteraction);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseInteraction);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKey, false, 0, true);
+			
+		}
+		
+		private function onKey(e:KeyboardEvent):void {
+			if (e.keyCode == Keyboard.BACK) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				this.onExit(null);
+			}
 		}
 		private function onMouseInteraction(e:MouseEvent):void{
 			
@@ -104,16 +115,20 @@ package com.cttoronto.mobile.crackaquack.view
 		private function onTimer(e:TimerEvent):void{
 			score++;
 		}
-		private function deadduck():void{
+		private function deadduck(e:Event = null):void{
 			score_timer.stop();
 			score_timer.removeEventListener(TimerEvent.TIMER, onTimer);
 			assets_game.mc_dead_duck.visible = true;
 			assets_game.mc_duck.visible = assets_game.mc_flap.visible = false;
+			
+			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
+			
 		}
 		private function onExit(e:MouseEvent):void{
 			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			TweenMax.to(this, 0.5, {x:-this.width*2});
 			TweenMax.delayedCall(0.5, onDispatchHome);
+			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
 		}
 		private function onDispatchHome():void{
 			dispatchEvent(new Event("HOME"));
