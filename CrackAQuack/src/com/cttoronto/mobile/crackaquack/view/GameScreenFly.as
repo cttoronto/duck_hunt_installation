@@ -19,6 +19,7 @@ package com.cttoronto.mobile.crackaquack.view
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	public class GameScreenFly extends MasterView
 	{
@@ -129,7 +130,11 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			TweenMax.to(this, 0.5, {x:-this.width*2});
 			TweenMax.delayedCall(0.5, onDispatchHome);
-			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
+			
+			
+			CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, 888, 888);
+			flash.utils.setTimeout(function():void { CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid); }, 1000);  
+			
 		}
 		private function onDispatchHome():void{
 			dispatchEvent(new Event("HOME"));

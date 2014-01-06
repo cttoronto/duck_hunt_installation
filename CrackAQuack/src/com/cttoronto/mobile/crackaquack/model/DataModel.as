@@ -25,6 +25,7 @@ package com.cttoronto.mobile.crackaquack.model
 		
 		private var _uid:int = 0;
 		private var _color:uint;
+		private var _colorString:String;
 		private var _toleranceHigh:int = 90;
 		private var _toleranceLow:int = 90;
 		
@@ -67,6 +68,16 @@ package com.cttoronto.mobile.crackaquack.model
 		private var _loaded:Boolean = false;
 				
 		private var _path:String = '';				
+
+		public function get colorString():String
+		{
+			return _colorString;
+		}
+
+		public function set colorString(value:String):void
+		{
+			_colorString = value;
+		}
 
 		public function get toleranceLow():int
 		{

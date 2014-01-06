@@ -33,12 +33,13 @@ package com.cttoronto.mobile.crackaquack.view
 		private function onExit(e:MouseEvent = null):void{
 			TweenMax.killDelayedCallsTo(onExit);
 			
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			
 			TweenMax.to(this, 0.5, {x:-stage.stageWidth, onComplete:onLoadHome});
 		}
 		protected function onLoadHome(e:Event = null):void
 		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onExit);
+			
 			dispatchEvent(new Event("HOME"));
 		}
 	}

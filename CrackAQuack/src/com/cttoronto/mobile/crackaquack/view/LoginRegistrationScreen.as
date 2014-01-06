@@ -1,29 +1,29 @@
-package com.cttoronto.mobile.crackaquack.view.components
+package com.cttoronto.mobile.crackaquack.view
 {
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
 	
-	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	public class LoginRegistration extends MovieClip
+	public class LoginRegistrationScreen extends MasterView
 	{
 		private var assets_login:mc_login_lightboxes;
 		private var type:String;
 		
-		public function LoginRegistration(ARG_type:String)
+		public function LoginRegistrationScreen(ARG_type:String)
 		{
 			type = ARG_type;
 			super();
-			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-		private function onAdded(e:Event = null):void{
-			removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+		
+		override protected function init():void{
+			super.init();
 			
 			assets_login = new mc_login_lightboxes();
 			addChild(assets_login);
 			
+//			assets_login.mc_btn_register.addEventListener(MouseEvent.MOUSE_UP, onRegister);
 			assets_login.mc_btn_login.addEventListener(MouseEvent.MOUSE_UP, onLogin);
 			
 			show_dialogue = false;

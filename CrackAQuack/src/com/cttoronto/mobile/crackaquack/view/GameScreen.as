@@ -1,7 +1,6 @@
 package com.cttoronto.mobile.crackaquack.view {
 	//* 
 	import com.adobe.nativeExtensions.Vibration;
-	//*/
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
@@ -10,13 +9,16 @@ package com.cttoronto.mobile.crackaquack.view {
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.display.PixelSnapping;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.sensors.Accelerometer;
@@ -40,12 +42,14 @@ package com.cttoronto.mobile.crackaquack.view {
 		
 		private var samplebmpd:BitmapData;
 		private var displaybmp:Bitmap;
+		private var hitbmpd:BitmapData;
 		
 		private var assets_game:mc_view_game = new mc_view_game();
 		private var _kills:int = 0;
 		
 		private var _reload:Boolean = false;
 		private var sound_gun:audio_gunfire = new audio_gunfire();
+		private var sound_reload:audio_reload = new audio_reload();
 		
 //		private var mc_mask_vid:MovieClip = new MovieClip();
 //		private var mc_mask_game:MovieClip = new MovieClip();
@@ -139,6 +143,7 @@ package com.cttoronto.mobile.crackaquack.view {
 			stage.addEventListener(MouseEvent.MOUSE_UP, onClick);
 			
 			samplebmpd = new BitmapData(100,100,false);
+			hitbmpd = new BitmapData(50,50,false);
 			displaybmp = new Bitmap(samplebmpd);
 //			addChild(displaybmp);
 			
@@ -276,6 +281,8 @@ package com.cttoronto.mobile.crackaquack.view {
 		private function reloadRounds(e:Event = null):void{
 			rounds = 5;
 			
+			sound_reload.play(0);
+			
 			updateRounds();
 			reload = false;
 			//tf.text = "Rounds: " + rounds + "\n";
@@ -283,13 +290,15 @@ package com.cttoronto.mobile.crackaquack.view {
 			TweenMax.delayedCall(0.3, vibe);
 		}
 		private function onClick(e:MouseEvent):void{	
-			//tf.text = accel_val.x + "\n" + accel_val.y + "\n" + accel_val.z + "\n";
+			
 			rounds --;
+			
 			if (accel_val.x <0.5 && accel_val.x >-0.5 &&accel_val.y <0.5 && accel_val.y >-0.5 &&accel_val.z <1.5 && accel_val.z >0.75){
 				reloadRounds()
 				
 				return
 			}
+			
 			if (rounds >= 0){
 				//tf.text = "Rounds: " + rounds + "\n";
 				sound_gun.play(0);
@@ -318,6 +327,12 @@ package com.cttoronto.mobile.crackaquack.view {
 			samplematrix.tx = -(ConfigValues.START_SCALE.width/2-50);
 			samplematrix.ty = -(ConfigValues.START_SCALE.height/2-50);
 //			vid.mask = null;
+			
+			
+			// draw the center of the screen to the hitbitmap
+//			hitbmpd.draw(cropBitmap(vid_parent, -(vid_parent.width / 2) - 25, -(vid_parent.height / 2) - 25, 50, 50));
+			
+			
 			samplebmpd.draw(vid_parent,samplematrix);
 //			vid.mask = mc_mask_vid;
 			samplepixel = hexToRGB(samplebmpd.getPixel(50, 50));
@@ -326,11 +341,32 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			var k_tolerance:Number = 102;
 			
+//			 check the center 
+//			samplepixel = hexToRGB(samplebmpd.getPixel(50,25));
+			duckCheck = checkTargColor(samplepixel)
+			//				trace(duckCheck.colorname);
+			if (duckCheck.hit){
+				//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+				duckCheck = checkTargColor(samplepixel)
+				if (duckCheck.hit){
+//					samplepixel = hexToRGB(samplebmpd.getPixel(50, 0));
+					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
+					//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
+					kills++;
+					
+					CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
+					return;
+				}
+			}
+			
+			return;
+			
 			if (samplepixel.r < k_tolerance && samplepixel.g < k_tolerance && samplepixel.b < k_tolerance){
 				//sample pixel is black or dark
 				var duckCheck:Object;
 				samplepixel = hexToRGB(samplebmpd.getPixel(75, 25));
 				duckCheck = checkTargColor(samplepixel)
+				
 				if (duckCheck.hit){
 					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 					duckCheck = checkTargColor(samplepixel)
@@ -339,7 +375,7 @@ package com.cttoronto.mobile.crackaquack.view {
 						//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 						//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
 						kills++;
-						
+							
 						CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
 						return;
 					}
@@ -347,6 +383,7 @@ package com.cttoronto.mobile.crackaquack.view {
 				
 				samplepixel = hexToRGB(samplebmpd.getPixel(50,25));
 				duckCheck = checkTargColor(samplepixel)
+//				trace(duckCheck.colorname);
 				if (duckCheck.hit){
 					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 					duckCheck = checkTargColor(samplepixel)
@@ -362,7 +399,8 @@ package com.cttoronto.mobile.crackaquack.view {
 				}
 				
 				samplepixel = hexToRGB(samplebmpd.getPixel(75, 50));
-				duckCheck = checkTargColor(samplepixel)
+				duckCheck = checkTargColor(samplepixel);
+				trace(duckCheck.colorname);
 				if (duckCheck.hit){
 					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 					duckCheck = checkTargColor(samplepixel)
@@ -387,19 +425,42 @@ package com.cttoronto.mobile.crackaquack.view {
 			//	vid.y = mouseY;
 			//	tf.text += "\n" + stage.stageWidth + " " + stage.stageHeight + " " + vid.width + " " + vid.height+ " " + mouseX + " " + mouseY;
 		}
+		
+		/**
+		 * cropBitmap
+		 * @ARG_object   the display object to crop
+		 * @ARG_x        the horizontal amount to shift the crop (0 = no shift)
+		 * @ARG_y        the vertical amount to shift the crop (0 = no shift)
+		 * @ARG_width    width to crop to
+		 * @ARG_height   height to crop to
+		 **/
+		private function cropBitmap( ARG_object:DisplayObject, ARG_x:Number, ARG_y:Number, ARG_width:Number, ARG_height:Number):Bitmap {
+			// create a rectangle of the specific crop size
+			var cropArea:Rectangle = new Rectangle(0, 0, ARG_width, ARG_height);
+			// create a BitmapData object the size of the crop
+			var bmpd:BitmapData = new BitmapData(ARG_width, ARG_height);
+			// create the cropped Bitmap object from the bitmap data
+			var croppedBitmap:Bitmap = new Bitmap(bmpd, PixelSnapping.ALWAYS, true);
+			// create the matrix that will shift the crop from 0,0
+			var cropMatrix:Matrix = new Matrix();
+			cropMatrix.translate(-ARG_x, -ARG_y);
+			// draw the supplied object, cropping to the cropArea with the cropMatrix offseting the result
+			bmpd.draw( ARG_object, cropMatrix, null, null, cropArea, true );
+			return croppedBitmap; // return the cropped bitmap
+		}
 		private function checkTargColor(samplepixel:Object):Object{
 			
 			var highTolerance:Number = DataModel.getInstance().toleranceHigh;
 			var lowTolerance:Number = DataModel.getInstance().toleranceLow;
 			
 			if (samplepixel.r > highTolerance && samplepixel.g < lowTolerance&& samplepixel.b >highTolerance){
-				return {hit:true, color:0xFF00FF, colorname:"Magenta"};
+				return {hit:true, color:0xFF00FF, colorname:"magenta"};
 			} else if (samplepixel.r >highTolerance&& samplepixel.g > highTolerance&& samplepixel.b <lowTolerance){
-				return {hit:true, color:0xFFFF00, colorname:"Yellow"};
+				return {hit:true, color:0xFFFF00, colorname:"yellow"};
 			}else if (samplepixel.r >highTolerance&& samplepixel.g < lowTolerance&& samplepixel.b <lowTolerance){
-				return {hit:true, color:0xFF0000, colorname:"Red"};
+				return {hit:true, color:0xFF0000, colorname:"red"};
 			}else if (samplepixel.r <lowTolerance&& samplepixel.g > highTolerance && samplepixel.b < lowTolerance){
-				return {hit:true, color:0x00FF00, colorname:"Green"};
+				return {hit:true, color:0x00FF00, colorname:"green"};
 			}
 			return {hit:false};
 		}

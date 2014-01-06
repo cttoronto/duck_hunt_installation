@@ -14,7 +14,7 @@ package com.cttoronto.mobile.crackaquack.model
 		private static var instance:CommunicationManager;
 		private static var allowInstantiation:Boolean = true;
 		
-		private var url: String = 'http://ewe.insomniacbychoice.com:8090';
+		private var url: String = 'http://www.crackaquack.com:8090';
 		
 		private var _connected:Boolean = false;
 		private var attempts:int = 0;
@@ -59,7 +59,7 @@ package com.cttoronto.mobile.crackaquack.model
 				if (json["user"].playerType == "duck") {
 					// set the color
 					DataModel.getInstance().color = ConfigValues.PLAYER_COLOR[json["user"].color];
-//					trace(DataModel.getInstance().color);
+					DataModel.getInstance().colorString = json["user"].color;
 				}
 				DataModel.getInstance().dispatchEvent(new Event("LOGIN_COMPLETE"));
 			} else {
@@ -116,6 +116,7 @@ package com.cttoronto.mobile.crackaquack.model
 		public function hit(ARG_uid:int, ARG_color:String):void {
 			var req:URLRequest = new URLRequest(url + "/uid/" + ARG_uid + "/hit/" + ARG_color);
 			var loader:URLLoader = new URLLoader();
+			
 			loader.addEventListener(Event.COMPLETE, onHit);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
 			loader.load(req);

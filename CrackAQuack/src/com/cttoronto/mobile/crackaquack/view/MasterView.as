@@ -74,8 +74,7 @@ package com.cttoronto.mobile.crackaquack.view
 			TweenMax.to(this, 0.5, {x:orig_x});
 		}
 		public function destroy():void {
-			
-			this.removeChildren();			
+			while (this.numChildren > 0) { removeChildAt(0); }
 		}
 	}
 }

@@ -38,7 +38,7 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_instructions.mc_btn_cancel.addEventListener(MouseEvent.MOUSE_UP, onCancelClick);
 			assets_instructions.mc_btn_play.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
 			
-			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_UP, onKey);
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKey, false, 0, true);
 			
 			if(assets_instructions.mc_game_image){
 				assets_instructions.mc_game_image.addEventListener(MouseEvent.MOUSE_UP, onPlayClick);
@@ -60,7 +60,7 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_instructions.mc_btn_cancel.removeEventListener(MouseEvent.MOUSE_UP, onCancelClick);
 			assets_instructions.mc_btn_play.removeEventListener(MouseEvent.MOUSE_UP, onPlayClick);
 			
-			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_UP, onKey);
+			NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_UP, onKey);
 			
 			dispatchEvent(new Event("CANCEL"));
 		}

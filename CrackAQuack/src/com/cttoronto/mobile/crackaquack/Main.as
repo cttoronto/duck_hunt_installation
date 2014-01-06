@@ -5,6 +5,7 @@ package com.cttoronto.mobile.crackaquack
 	import com.cttoronto.mobile.crackaquack.view.HomeScreen;
 	import com.cttoronto.mobile.crackaquack.view.InstructionScreen;
 	import com.cttoronto.mobile.crackaquack.view.IntroScreen;
+	import com.cttoronto.mobile.crackaquack.view.LoginRegistrationScreen;
 	import com.cttoronto.mobile.crackaquack.view.MasterView;
 	
 	import flash.display.Sprite;
@@ -16,6 +17,7 @@ package com.cttoronto.mobile.crackaquack
 		private var introScreen:IntroScreen;
 		private var instructionScreen:InstructionScreen;
 		private var gameScreen:MasterView;
+		private var loginScreen:LoginRegistrationScreen; 
 		
 		public function Main()
 		{
@@ -28,9 +30,12 @@ package com.cttoronto.mobile.crackaquack
 			showIntro();
 		}
 		private function showIntro():void{
+			
 			introScreen = new IntroScreen();
+			
 			introScreen.addEventListener("HOME", onHomeLoad);
 			addChild(introScreen);
+			
 		}
 		private function removeIntro():void {
 			introScreen.removeEventListener("HOME", onHomeLoad);
