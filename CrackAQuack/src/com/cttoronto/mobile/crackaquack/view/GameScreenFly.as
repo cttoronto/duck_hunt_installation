@@ -84,7 +84,9 @@ package com.cttoronto.mobile.crackaquack.view
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseInteraction);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseInteraction);
+			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			
 			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKey, false, 0, true);
 			
 		}
@@ -123,22 +125,35 @@ package com.cttoronto.mobile.crackaquack.view
 			assets_game.mc_dead_duck.visible = true;
 			assets_game.mc_duck.visible = assets_game.mc_flap.visible = color_fill.visible = false;
 			
-			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseInteraction);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseInteraction);
 			
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			
+			
+//			CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid);
+//			this.onExit(null);
+			flash.utils.setTimeout(function():void { onExit(null); }, 1000);
 		}
+		
 		private function onExit(e:MouseEvent):void{
 			assets_game.mc_btn_endgame.removeEventListener(MouseEvent.MOUSE_UP, onExit);
 			TweenMax.to(this, 0.5, {x:-this.width*2});
-			TweenMax.delayedCall(0.5, onDispatchHome);
-			
+			TweenMax.delayedCall(1.5, onDispatchHome);
 			
 			CommunicationManager.getInstance().flyDuck(DataModel.getInstance().uid, 888, 888);
-			flash.utils.setTimeout(function():void { CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid); }, 1000);  
 			
+			if (Accelerometer.isSupported) {
+				if (accl!=null) accl.removeEventListener(AccelerometerEvent.UPDATE, onAccelerometer);
+			}
+			
+			flash.utils.setTimeout(function():void { CommunicationManager.getInstance().leaveRoom(DataModel.getInstance().uid); }, 1000);  	
 		}
+		
 		private function onDispatchHome():void{
 			dispatchEvent(new Event("HOME"));
 		}
+		
 		private function setupCompass():void {
 			try
 			{

@@ -53,7 +53,7 @@ package com.cttoronto.mobile.crackaquack.model
 			
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = JSON.parse(l.data);
-			trace(json.result);
+//			trace(json.result);
 			if (json.result == "SUCCESS") {
 				DataModel.getInstance().uid = json["user"].uid as int;
 				if (json["user"].playerType == "duck") {
@@ -103,10 +103,15 @@ package com.cttoronto.mobile.crackaquack.model
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = JSON.parse(l.data);
 			
+			l.removeEventListener(Event.COMPLETE, onFly);
+			l.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+			
 			if (json.result == "SUCCESS") {
 				if (json["user"].dead == true) {
 					DataModel.getInstance().dispatchEvent(new Event("DUCK_DIED"));
 				}
+			} else if (json.result == "ERROR") {
+				DataModel.getInstance().dispatchEvent(new Event("DUCK_DIED"));
 			}
 		}
 		
@@ -126,6 +131,8 @@ package com.cttoronto.mobile.crackaquack.model
 		private function onHit(e:Event):void {
 			var l:URLLoader = e.target as URLLoader;
 			var json:Object = (JSON.parse(l.data));
+			l.removeEventListener(Event.COMPLETE, onHit);
+			l.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 //			trace(json.result, json.user.uid);
 			//{"result":"SUCCESS","user":{"__v":0,"_id":"524b5b378ceb21793b000001","active":true,"hits":6,"loggedIn":true,"password":"password","playerType":"hunter","ranking":1,"registered":"true","roomId":"demo","score":0,"socialId":0,"type":"","uid":0,"userName":"testUserName"}}
 		}

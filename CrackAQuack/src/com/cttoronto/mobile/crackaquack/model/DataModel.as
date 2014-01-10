@@ -206,7 +206,7 @@ package com.cttoronto.mobile.crackaquack.model
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, loadXMLComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, xmlLoadError);
-			loader.load(new URLRequest("http://ewe.insomniacbychoice.com/data.json"));	
+			loader.load(new URLRequest("http://crackaquack.com/data.json"));	
 		}
 		
 		private function xmlLoadError(ARG_evt:IOErrorEvent):void {

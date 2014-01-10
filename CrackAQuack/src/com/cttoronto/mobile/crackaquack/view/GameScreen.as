@@ -4,6 +4,7 @@ package com.cttoronto.mobile.crackaquack.view {
 	import com.cttoronto.mobile.crackaquack.ConfigValues;
 	import com.cttoronto.mobile.crackaquack.model.CommunicationManager;
 	import com.cttoronto.mobile.crackaquack.model.DataModel;
+	import com.cultcreative.utils.Debug;
 	import com.greensock.TweenMax;
 	
 	import flash.desktop.NativeApplication;
@@ -344,19 +345,22 @@ package com.cttoronto.mobile.crackaquack.view {
 //			 check the center 
 //			samplepixel = hexToRGB(samplebmpd.getPixel(50,25));
 			duckCheck = checkTargColor(samplepixel)
+				
+				Debug.getInstance().info(duckCheck.hit, samplepixel);
 			//				trace(duckCheck.colorname);
 			if (duckCheck.hit){
 				//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
-				duckCheck = checkTargColor(samplepixel)
-				if (duckCheck.hit){
+//				duckCheck = checkTargColor(samplepixel)
+					
+//				if (duckCheck.hit){
 //					samplepixel = hexToRGB(samplebmpd.getPixel(50, 0));
 					//tf.appendText("\n"+samplepixel.r + " " + samplepixel.g + " " + samplepixel.b);
 					//tf.appendText("\nIt's a duck: "+ duckCheck.colorname);
 					kills++;
-					
+					Debug.getInstance().info(duckCheck.colorname);
 					CommunicationManager.getInstance().hit(DataModel.getInstance().uid, duckCheck.colorname);
 					return;
-				}
+//				}
 			}
 			
 			return;
@@ -452,18 +456,37 @@ package com.cttoronto.mobile.crackaquack.view {
 			
 			var highTolerance:Number = DataModel.getInstance().toleranceHigh;
 			var lowTolerance:Number = DataModel.getInstance().toleranceLow;
+			var redObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.red);
+			var yellowObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.yellow);
+			var magentaObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.magenta);
+			var blackObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.black);
+			var blueObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.blue);
+			var greenObj:Object = this.hexToRGB(ConfigValues.PLAYER_COLOR.green);
 			
-			if (samplepixel.r > highTolerance && samplepixel.g < lowTolerance&& samplepixel.b >highTolerance){
-				return {hit:true, color:0xFF00FF, colorname:"magenta"};
-			} else if (samplepixel.r >highTolerance&& samplepixel.g > highTolerance&& samplepixel.b <lowTolerance){
-				return {hit:true, color:0xFFFF00, colorname:"yellow"};
-			}else if (samplepixel.r >highTolerance&& samplepixel.g < lowTolerance&& samplepixel.b <lowTolerance){
-				return {hit:true, color:0xFF0000, colorname:"red"};
-			}else if (samplepixel.r <lowTolerance&& samplepixel.g > highTolerance && samplepixel.b < lowTolerance){
-				return {hit:true, color:0x00FF00, colorname:"green"};
+			var toleranceAdjust:int = highTolerance;
+			
+			if (isNear(samplepixel.r, magentaObj.r, toleranceAdjust) && isNear(samplepixel.g, magentaObj.g, toleranceAdjust) && isNear(samplepixel.b, magentaObj.b, toleranceAdjust)){
+				return {hit:true, color: ConfigValues.PLAYER_COLOR.magenta, colorname:"magenta"};
+			} else if (isNear(samplepixel.r, yellowObj.r, toleranceAdjust) && isNear(samplepixel.g, yellowObj.g, toleranceAdjust) && isNear(samplepixel.b, yellowObj.b, toleranceAdjust)){
+				return {hit:true, color: ConfigValues.PLAYER_COLOR.yellow, colorname:"yellow"};
+			}else if (isNear(samplepixel.r, redObj.r, toleranceAdjust) && isNear(samplepixel.g, redObj.g, toleranceAdjust) && isNear(samplepixel.b, redObj.b, toleranceAdjust)){
+				return {hit:true, color:ConfigValues.PLAYER_COLOR.red, colorname:"red"};
+			}else if (isNear(samplepixel.r, greenObj.r, toleranceAdjust) && isNear(samplepixel.g, greenObj.g, toleranceAdjust) && isNear(samplepixel.b, greenObj.b, toleranceAdjust)){
+				return {hit:true, color:ConfigValues.PLAYER_COLOR.green, colorname:"green"};
+			}else if (isNear(samplepixel.r, blackObj.r, toleranceAdjust) && isNear(samplepixel.g, blackObj.g, toleranceAdjust) && isNear(samplepixel.b, blackObj.b, toleranceAdjust)){
+				return {hit:true, color:ConfigValues.PLAYER_COLOR.black, colorname:"black"};
+			}else if (isNear(samplepixel.r, blueObj.r, toleranceAdjust) && isNear(samplepixel.g, blueObj.g, toleranceAdjust) && isNear(samplepixel.b, blueObj.b, toleranceAdjust)){
+				return {hit:true, color:ConfigValues.PLAYER_COLOR.blue, colorname:"blue"};
 			}
 			return {hit:false};
 		}
+		
+		private function isNear(color1:int, color2:int, tolerance):Boolean {
+			
+			return ( Math.abs(color1 - color2) < tolerance ); 
+			
+		}
+		
 		private function loop(e:Event):void{
 		}
 
